@@ -1,0 +1,101 @@
+// Prisma Schema for Rural Workfare Face-Recognition Attendance System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Site {
+  id          String       @id @default(cuid())
+  name        String
+  location    String
+  created_at  DateTime     @default(now())
+  workers     Worker[]
+  supervisors Supervisor[]
+  sessions    Session[]
+}
+
+model Supervisor {
+  id            String    @id @default(cuid())
+  name          String
+  phone         String    @unique
+  password_hash String
+  site_id       String
+  site          Site      @relation(fields: [site_id], references: [id], onDelete: Cascade)
+  sessions      Session[]
+  created_at    DateTime  @default(now())
+}
+
+model Worker {
+  id                String       @id @default(cuid())
+  name              String
+  phone             String       @unique
+  photo_url         String?
+  face_descriptor   Json         // 128-dimensional array of floats stored as JSON array
+  wage_rate_per_day Float        @default(350.0) // Standard daily MGNREGA rate in INR
+  site_id           String
+  site              Site         @relation(fields: [site_id], references: [id], onDelete: Cascade)
+  attendances       Attendance[]
+  wage_records      WageRecord[]
+  created_at        DateTime     @default(now())
+}
+
+enum SessionStatus {
+  active
+  closed
+}
+
+model Session {
+  id            String       @id @default(cuid())
+  site_id       String
+  site          Site         @relation(fields: [site_id], references: [id], onDelete: Cascade)
+  supervisor_id String
+  supervisor    Supervisor   @relation(fields: [supervisor_id], references: [id])
+  date          DateTime     @default(now())
+  status        SessionStatus @default(active)
+  created_at    DateTime     @default(now())
+  attendances   Attendance[]
+  wage_records  WageRecord[]
+}
+
+enum AttendanceStatus {
+  auto_confirmed
+  manual_review
+  manual_approved
+  manual_rejected
+}
+
+model Attendance {
+  id               String           @id @default(cuid())
+  worker_id        String
+  worker           Worker           @relation(fields: [worker_id], references: [id], onDelete: Cascade)
+  session_id       String
+  session          Session          @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  timestamp        DateTime         @default(now())
+  confidence_score Float            // Distance metric (0.0 best, <0.5 auto_confirmed)
+  status           AttendanceStatus @default(auto_confirmed)
+  reviewed_by      String?          // Supervisor ID or name
+  snapshot_url     String?          // Cloudinary/base64 photo of borderline match
+  notes            String?          // Reason for manual review / dispute
+  created_at       DateTime         @default(now())
+
+  @@unique([session_id, worker_id])
+}
+
+model WageRecord {
+  id            String   @id @default(cuid())
+  worker_id     String
+  worker        Worker   @relation(fields: [worker_id], references: [id], onDelete: Cascade)
+  session_id    String
+  session       Session  @relation(fields: [session_id], references: [id], onDelete: Cascade)
+  days_present  Float    @default(1.0)
+  computed_wage Float
+  exported_at   DateTime @default(now())
+
+  @@unique([session_id, worker_id])
+}
