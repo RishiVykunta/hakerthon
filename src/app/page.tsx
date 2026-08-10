@@ -20,42 +20,17 @@ import {
 export default function LandingPage() {
   return (
     <div className="space-y-16 py-4 max-w-7xl mx-auto">
-      {/* Hero Banner with Sunset Bronze Glassmorphism */}
-      <section className="relative overflow-hidden rounded-3xl glass-panel-bronze p-8 sm:p-12 border border-amber-400/40 shadow-xl">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-
+      {/* Hero Banner */}
+      <section className="relative overflow-hidden rounded-3xl glass-panel p-8 sm:p-12 border border-slate-200 shadow-xl">
         <div className="relative z-10 max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-extrabold shadow-sm">
-            <Landmark className="w-4 h-4 text-amber-600" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-300 text-slate-800 text-xs font-extrabold shadow-sm">
+            <Landmark className="w-4 h-4 text-slate-700" />
             Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
             AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
           </h1>
-
-          <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
-            Eliminate ghost workers, proxy attendance, and wage leakages at remote rural workfare sites. Powered by on-device 128-dimensional face recognition, anti-spoofing liveness verification, supervisor review queues, and instant CSV wage exports.
-          </p>
-
-          <div className="pt-2 flex flex-wrap items-center gap-4">
-            <Link
-              href="/supervisor/session/live"
-              className="px-6 py-4 rounded-2xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2.5 shadow-xl shadow-amber-500/20 hover:scale-[1.02]"
-            >
-              <Camera className="w-5 h-5 text-slate-950 animate-pulse" />
-              Launch Live Attendance Kiosk
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/supervisor/dashboard"
-              className="px-6 py-4 rounded-2xl font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 hover:border-amber-500/50 shadow-sm transition-all flex items-center gap-2 hover:scale-[1.02]"
-            >
-              <Landmark className="w-4 h-4 text-amber-600" />
-              Supervisor Dashboard
-            </Link>
-          </div>
         </div>
       </section>
 
