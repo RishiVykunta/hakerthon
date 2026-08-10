@@ -41,14 +41,6 @@ export default function RootLayout({
               <span className="text-slate-300">•</span>
               <span>MGNREGA Rural Workfare Technology Stack</span>
             </div>
-            <div className="flex items-center gap-4 text-slate-500 font-mono text-[11px]">
-              <span className="inline-flex items-center gap-1.5 text-emerald-600 font-semibold">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-                Vercel Serverless Ready
-              </span>
-              <span>•</span>
-              <span>Neon PostgreSQL + Prisma</span>
-            </div>
           </div>
         </footer>
       </body>

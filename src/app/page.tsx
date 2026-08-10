@@ -22,11 +22,6 @@ export default function LandingPage() {
     <div className="space-y-16 py-6 max-w-7xl mx-auto">
       {/* Executive Centered Hero Section */}
       <section className="py-6 text-center space-y-6 max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/90 border border-amber-300 text-amber-950 text-xs font-extrabold shadow-sm mx-auto">
-          <Landmark className="w-4 h-4 text-amber-700" />
-          Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
-        </div>
-
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-950 leading-[1.2] max-w-3xl mx-auto">
           AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
         </h1>
