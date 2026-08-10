@@ -20,33 +20,28 @@ import {
 export default function LandingPage() {
   return (
     <div className="space-y-16 py-6 max-w-7xl mx-auto">
-      {/* Executive Hero Section with Real Rural Attendance Photo Background */}
-      <section className="relative overflow-hidden rounded-3xl border border-slate-200/90 shadow-xl max-w-5xl mx-auto bg-cover bg-center min-h-[380px] flex items-center justify-center" style={{ backgroundImage: `url('/mgnrega-attendance.png')` }}>
-        {/* Soft Light Overlay for High Text Readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white/95 via-white/90 to-amber-50/80 backdrop-blur-[2px] pointer-events-none" />
+      {/* Executive Centered Hero Section */}
+      <section className="py-6 text-center space-y-6 max-w-4xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/90 border border-amber-300 text-amber-950 text-xs font-extrabold shadow-sm mx-auto">
+          <Landmark className="w-4 h-4 text-amber-700" />
+          Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
+        </div>
 
-        <div className="relative z-10 p-8 sm:p-14 text-center space-y-6 max-w-4xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/90 border border-amber-300 text-amber-950 text-xs font-extrabold shadow-sm mx-auto backdrop-blur-sm">
-            <Landmark className="w-4 h-4 text-amber-700" />
-            Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
-          </div>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-950 leading-[1.2] max-w-3xl mx-auto">
+          AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
+        </h1>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-950 leading-[1.2] max-w-3xl mx-auto">
-            AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
-          </h1>
-
-          {/* Feature Highlights Ribbon */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-900">
-            <span className="px-3.5 py-1.5 rounded-xl bg-white/90 border border-slate-300/80 flex items-center gap-1.5 shadow-sm backdrop-blur-sm">
-              <Cpu className="w-4 h-4 text-amber-700" /> 100% Client ML Recognition
-            </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-white/90 border border-slate-300/80 flex items-center gap-1.5 shadow-sm backdrop-blur-sm">
-              <ShieldCheck className="w-4 h-4 text-emerald-700" /> Anti-Spoofing Liveness Check
-            </span>
-            <span className="px-3.5 py-1.5 rounded-xl bg-white/90 border border-slate-300/80 flex items-center gap-1.5 shadow-sm backdrop-blur-sm">
-              <FileSpreadsheet className="w-4 h-4 text-amber-700" /> Instant CSV Wage Export
-            </span>
-          </div>
+        {/* Feature Highlights Ribbon */}
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-bold text-slate-900">
+          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 flex items-center gap-1.5 shadow-sm">
+            <Cpu className="w-4 h-4 text-amber-700" /> 100% Client ML Recognition
+          </span>
+          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 flex items-center gap-1.5 shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-emerald-700" /> Anti-Spoofing Liveness Check
+          </span>
+          <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 flex items-center gap-1.5 shadow-sm">
+            <FileSpreadsheet className="w-4 h-4 text-amber-700" /> Instant CSV Wage Export
+          </span>
         </div>
       </section>
 
