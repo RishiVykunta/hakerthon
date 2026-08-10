@@ -34,52 +34,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Core Pain Point & Problem Statement Highlights */}
-      <section className="space-y-8">
-        <div className="text-center max-w-2xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 text-xs font-extrabold">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-600" /> High-Impact Rural Problem Statement
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-            Why MGNREGA Attendance Security Wins Hackathons
-          </h2>
-          <p className="text-sm text-slate-600">
-            Real, well-documented rural workfare challenge across thousands of panchayats nationwide
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="glass-card p-6 rounded-3xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-orange-100 border border-orange-300 flex items-center justify-center text-orange-600 font-bold">
-              <ShieldAlert className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">Ghost Worker Elimination</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              Prevents unauthorized proxy signatures by matching incoming webcam frames against pre-enrolled worker face vector profiles in real time.
-            </p>
-          </div>
-
-          <div className="glass-card p-6 rounded-3xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600 font-bold">
-              <Cpu className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">100% Client-Side Recognition</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              `face-api.js` extracts 128-dimensional floating point descriptors directly in the browser. Zero video stream payloads are transferred server-side.
-            </p>
-          </div>
-
-          <div className="glass-card p-6 rounded-3xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600 font-bold">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold text-slate-900">Anti-Spoofing Liveness Verification</h3>
-            <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              Calculates relative facial landmark movement across consecutive video frames to prevent static printed photo and smartphone screen spoofing.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* 4-Phase System Architecture Workflow */}
       <section className="space-y-8">
