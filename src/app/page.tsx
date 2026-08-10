@@ -32,7 +32,7 @@ export default function LandingPage() {
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
-            AI Face Recognition Attendance & <span className="gradient-text-bronze">Wage Fraud Prevention</span> for MGNREGA Job Sites
+            AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
           </h1>
 
           <p className="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
