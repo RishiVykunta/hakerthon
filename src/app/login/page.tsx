@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ShieldCheck, UserCheck, Phone, Lock, ArrowRight, Sparkles, Sprout } from 'lucide-react'
+import { ShieldCheck, UserCheck, Phone, Lock, ArrowRight, Sparkles, Landmark } from 'lucide-react'
 
 function LoginForm() {
   const router = useRouter()
@@ -59,17 +59,17 @@ function LoginForm() {
     <div className="max-w-md mx-auto py-12 space-y-6">
       {/* Header */}
       <div className="text-center space-y-2">
-        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-600 to-amber-600 p-0.5 mx-auto shadow-xl shadow-emerald-950/60">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 via-amber-500 to-amber-600 p-0.5 mx-auto shadow-xl shadow-amber-950/60">
           <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
             {role === 'supervisor' ? (
-              <ShieldCheck className="w-7 h-7 text-emerald-400" />
+              <ShieldCheck className="w-7 h-7 text-amber-400" />
             ) : (
-              <UserCheck className="w-7 h-7 text-emerald-400" />
+              <UserCheck className="w-7 h-7 text-amber-400" />
             )}
           </div>
         </div>
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs font-bold">
-          <Sprout className="w-3.5 h-3.5" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/30 text-xs font-bold">
+          <Landmark className="w-3.5 h-3.5 text-amber-400" />
           MGNREGA Rural Portal
         </div>
         <h1 className="text-2xl font-extrabold text-white tracking-tight">
@@ -85,7 +85,7 @@ function LoginForm() {
           onClick={() => setRole('supervisor')}
           className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
             role === 'supervisor'
-              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/60'
+              ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-950/60'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -97,7 +97,7 @@ function LoginForm() {
           onClick={() => setRole('worker')}
           className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
             role === 'worker'
-              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/60'
+              ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-950/60'
               : 'text-slate-400 hover:text-white'
           }`}
         >
@@ -107,7 +107,7 @@ function LoginForm() {
       </div>
 
       {/* Form Card */}
-      <div className="glass-panel p-6 rounded-3xl border border-emerald-500/20 space-y-5">
+      <div className="glass-panel p-6 rounded-3xl border border-amber-500/20 space-y-5">
         {error && (
           <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-semibold">
             {error}
@@ -127,7 +127,7 @@ function LoginForm() {
                 onChange={(e) => setPhone(e.target.value)}
                 required
                 placeholder="Enter 10-digit mobile number"
-                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors font-mono"
               />
             </div>
           </div>
@@ -145,7 +145,7 @@ function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Enter supervisor password"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
                 />
               </div>
             </div>
@@ -154,7 +154,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 rounded-xl font-extrabold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60"
+            className="w-full py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-950/60"
           >
             {loading ? (
               <span className="inline-block w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
@@ -168,19 +168,19 @@ function LoginForm() {
         </form>
 
         {/* Demo Credentials Box */}
-        <div className="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
+        <div className="p-4 rounded-2xl bg-slate-900/90 border border-amber-500/30 space-y-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
             <Sparkles className="w-4 h-4" /> Hackathon Demo Quick Test Logins:
           </div>
           {role === 'supervisor' ? (
             <div className="text-xs text-slate-300 space-y-1 font-mono">
-              <div>Phone: <code className="text-emerald-300 font-bold">9876543210</code></div>
-              <div>Password: <code className="text-emerald-300 font-bold">password123</code></div>
+              <div>Phone: <code className="text-amber-300 font-bold">9876543210</code></div>
+              <div>Password: <code className="text-amber-300 font-bold">password123</code></div>
             </div>
           ) : (
             <div className="text-xs text-slate-300 space-y-1 font-mono">
-              <div>Ramesh Singh: <code className="text-emerald-300 font-bold">9876543211</code></div>
-              <div>Sunita Devi: <code className="text-emerald-300 font-bold">9876543212</code></div>
+              <div>Ramesh Singh: <code className="text-amber-300 font-bold">9876543211</code></div>
+              <div>Sunita Devi: <code className="text-amber-300 font-bold">9876543212</code></div>
             </div>
           )}
         </div>

@@ -10,7 +10,6 @@ import {
   FileSpreadsheet,
   AlertTriangle,
   Users,
-  Sprout,
   ShieldAlert,
   Landmark,
   FileCheck,
@@ -21,19 +20,19 @@ import {
 export default function LandingPage() {
   return (
     <div className="space-y-16 py-4 max-w-7xl mx-auto">
-      {/* Hero Banner with Modern Dark Gradient */}
-      <section className="relative overflow-hidden rounded-3xl glass-panel-emerald p-8 sm:p-12 border border-emerald-500/30 shadow-2xl">
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[500px] h-[500px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* Hero Banner with Executive Charcoal Obsidian & Sunset Bronze */}
+      <section className="relative overflow-hidden rounded-3xl glass-panel-bronze p-8 sm:p-12 border border-orange-500/30 shadow-2xl">
+        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-extrabold shadow-sm">
-            <Sprout className="w-4 h-4 text-emerald-400" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-extrabold shadow-sm">
+            <Landmark className="w-4 h-4 text-amber-400" />
             Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
-            AI Face Recognition Attendance & <span className="gradient-text-emerald">Wage Fraud Prevention</span> for MGNREGA Job Sites
+            AI Face Recognition Attendance & <span className="gradient-text-bronze">Wage Fraud Prevention</span> for MGNREGA Job Sites
           </h1>
 
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed">
@@ -43,7 +42,7 @@ export default function LandingPage() {
           <div className="pt-2 flex flex-wrap items-center gap-4">
             <Link
               href="/supervisor/session/live"
-              className="px-6 py-4 rounded-2xl font-extrabold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all flex items-center gap-2.5 shadow-xl shadow-emerald-950/80 hover:scale-[1.02]"
+              className="px-6 py-4 rounded-2xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2.5 shadow-xl shadow-amber-950/80 hover:scale-[1.02]"
             >
               <Camera className="w-5 h-5 text-slate-950 animate-pulse" />
               Launch Live Attendance Kiosk
@@ -51,7 +50,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/supervisor/dashboard"
-              className="px-6 py-4 rounded-2xl font-bold bg-slate-900/90 text-slate-200 hover:text-white border border-slate-700/80 hover:border-emerald-500/50 transition-all flex items-center gap-2 hover:scale-[1.02]"
+              className="px-6 py-4 rounded-2xl font-bold bg-slate-900/90 text-slate-200 hover:text-white border border-slate-700/80 hover:border-amber-500/50 transition-all flex items-center gap-2 hover:scale-[1.02]"
             >
               <Landmark className="w-4 h-4 text-amber-400" />
               Supervisor Dashboard
@@ -64,7 +63,7 @@ export default function LandingPage() {
       <section className="space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 text-xs font-extrabold">
-            <ShieldAlert className="w-3.5 h-3.5" /> High-Impact Rural Problem Statement
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" /> High-Impact Rural Problem Statement
           </div>
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
             Why MGNREGA Attendance Security Wins Hackathons
@@ -76,7 +75,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="glass-card p-6 rounded-3xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-400 font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 font-bold">
               <ShieldAlert className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-white">Ghost Worker Elimination</h3>
@@ -86,7 +85,7 @@ export default function LandingPage() {
           </div>
 
           <div className="glass-card p-6 rounded-3xl space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold">
+            <div className="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 font-bold">
               <Cpu className="w-6 h-6" />
             </div>
             <h3 className="text-lg font-bold text-white">100% Client-Side Recognition</h3>
@@ -116,9 +115,9 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">Phase 1</div>
+            <div className="text-xs font-extrabold text-amber-400 uppercase tracking-wider">Phase 1</div>
             <div className="font-bold text-white flex items-center gap-2 text-base">
-              <UserCheck className="w-5 h-5 text-emerald-400" /> Worker Enrollment
+              <UserCheck className="w-5 h-5 text-amber-400" /> Worker Enrollment
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Captures baseline reference photo and extracts 128-d face descriptor vector stored in Neon PostgreSQL.
@@ -126,9 +125,9 @@ export default function LandingPage() {
           </div>
 
           <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-emerald-400 uppercase tracking-wider">Phase 2</div>
+            <div className="text-xs font-extrabold text-orange-400 uppercase tracking-wider">Phase 2</div>
             <div className="font-bold text-white flex items-center gap-2 text-base">
-              <Camera className="w-5 h-5 text-emerald-400" /> Real-Time Kiosk Scan
+              <Camera className="w-5 h-5 text-orange-400" /> Real-Time Kiosk Scan
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Webcam matches faces with Euclidean distance threshold &lt;0.5 for instant auto-confirmation.
@@ -146,9 +145,9 @@ export default function LandingPage() {
           </div>
 
           <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-teal-400 uppercase tracking-wider">Phase 4</div>
+            <div className="text-xs font-extrabold text-orange-400 uppercase tracking-wider">Phase 4</div>
             <div className="font-bold text-white flex items-center gap-2 text-base">
-              <FileSpreadsheet className="w-5 h-5 text-teal-400" /> Wage & CSV Audit Export
+              <FileSpreadsheet className="w-5 h-5 text-orange-400" /> Wage & CSV Audit Export
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Computes total daily payouts (`days_present * wage_rate`), generates official CSV reports, and logs audit trail.
@@ -158,10 +157,10 @@ export default function LandingPage() {
       </section>
 
       {/* Demo Credentials Quick Callout */}
-      <section className="glass-panel p-8 rounded-3xl border border-emerald-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
+      <section className="glass-panel p-8 rounded-3xl border border-amber-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40">
               Ready for Hackathon Jury Demo
             </span>
           </div>
@@ -172,7 +171,7 @@ export default function LandingPage() {
         <div className="flex items-center gap-3">
           <Link
             href="/login?role=supervisor"
-            className="px-5 py-3 rounded-xl text-xs font-extrabold bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-950/60"
+            className="px-5 py-3 rounded-xl text-xs font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-lg shadow-amber-950/60"
           >
             Supervisor Login Demo
           </Link>

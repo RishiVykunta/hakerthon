@@ -14,10 +14,8 @@ import {
   TrendingDown,
   RefreshCw,
   Zap,
-  Sprout,
   Landmark,
   ShieldCheck,
-  IndianRupee,
 } from 'lucide-react'
 
 export default function SupervisorDashboard() {
@@ -93,16 +91,16 @@ export default function SupervisorDashboard() {
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       {/* Site Top Header & Active Session Control */}
-      <div className="glass-panel p-6 rounded-3xl border border-emerald-500/20 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
+      <div className="glass-panel p-6 rounded-3xl border border-amber-500/20 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5">
-              <Sprout className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 flex items-center gap-1.5">
+              <Landmark className="w-3.5 h-3.5 text-amber-400" />
               Active Job Site: Rampur Panchayat #4
             </span>
             {session?.status === 'active' ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-400 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping" />
                 ATTENDANCE SESSION ACTIVE
               </span>
             ) : (
@@ -120,7 +118,7 @@ export default function SupervisorDashboard() {
         <div className="flex items-center gap-3">
           <button
             onClick={fetchData}
-            className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-emerald-500/40 transition-all"
+            className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:border-amber-500/40 transition-all"
             title="Refresh Site Data"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -132,7 +130,7 @@ export default function SupervisorDashboard() {
             className={`px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center gap-2 shadow-lg ${
               session?.status === 'active'
                 ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30'
-                : 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-emerald-950/70 hover:scale-[1.02]'
+                : 'bg-amber-500 text-slate-950 hover:bg-amber-400 shadow-amber-950/70 hover:scale-[1.02]'
             }`}
           >
             {sessionActionLoading ? (
@@ -156,15 +154,15 @@ export default function SupervisorDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           href="/supervisor/session/live"
-          className="glass-card p-5 rounded-2xl border border-emerald-500/30 hover:border-emerald-500/60 group transition-all"
+          className="glass-card p-5 rounded-2xl border border-amber-500/30 hover:border-amber-500/60 group transition-all"
         >
           <div className="flex items-center justify-between">
-            <div className="w-11 h-11 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
               <Camera className="w-6 h-6 animate-pulse" />
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
           </div>
-          <h3 className="mt-3 font-bold text-white group-hover:text-emerald-400 transition-colors">
+          <h3 className="mt-3 font-bold text-white group-hover:text-amber-400 transition-colors">
             Live Scanner Kiosk
           </h3>
           <p className="text-xs text-slate-400 mt-1">Real-time AI face recognition & anti-spoof scanner</p>
@@ -172,15 +170,15 @@ export default function SupervisorDashboard() {
 
         <Link
           href="/supervisor/enroll"
-          className="glass-card p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/40 group transition-all"
+          className="glass-card p-5 rounded-2xl border border-slate-800 hover:border-amber-500/40 group transition-all"
         >
           <div className="flex items-center justify-between">
-            <div className="w-11 h-11 rounded-xl bg-teal-500/15 flex items-center justify-center text-teal-400 group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-orange-500/15 flex items-center justify-center text-orange-400 group-hover:scale-110 transition-transform">
               <UserCheck className="w-6 h-6" />
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-teal-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-orange-400 transition-colors" />
           </div>
-          <h3 className="mt-3 font-bold text-white group-hover:text-teal-400 transition-colors">
+          <h3 className="mt-3 font-bold text-white group-hover:text-orange-400 transition-colors">
             Enroll New Worker
           </h3>
           <p className="text-xs text-slate-400 mt-1">Capture webcam 128-d reference descriptor vector</p>
@@ -188,7 +186,7 @@ export default function SupervisorDashboard() {
 
         <Link
           href="/supervisor/review"
-          className="glass-card-amber p-5 rounded-2xl border border-amber-500/30 hover:border-amber-500/60 group transition-all relative"
+          className="glass-card p-5 rounded-2xl border border-amber-500/30 hover:border-amber-500/60 group transition-all relative"
         >
           {pendingReviewCount > 0 && (
             <span className="absolute top-4 right-4 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500 text-slate-950 animate-bounce shadow-md">
@@ -208,15 +206,15 @@ export default function SupervisorDashboard() {
 
         <Link
           href="/supervisor/export"
-          className="glass-card p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/40 group transition-all"
+          className="glass-card p-5 rounded-2xl border border-slate-800 hover:border-amber-500/40 group transition-all"
         >
           <div className="flex items-center justify-between">
-            <div className="w-11 h-11 rounded-xl bg-emerald-500/15 flex items-center justify-center text-emerald-400 group-hover:scale-110 transition-transform">
+            <div className="w-11 h-11 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 group-hover:scale-110 transition-transform">
               <FileSpreadsheet className="w-6 h-6" />
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 transition-colors" />
+            <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-amber-400 transition-colors" />
           </div>
-          <h3 className="mt-3 font-bold text-white group-hover:text-emerald-400 transition-colors">
+          <h3 className="mt-3 font-bold text-white group-hover:text-amber-400 transition-colors">
             CSV Wage Export
           </h3>
           <p className="text-xs text-slate-400 mt-1">Generate official site wage payout spreadsheet</p>
@@ -228,20 +226,20 @@ export default function SupervisorDashboard() {
         <div className="glass-card p-5 rounded-2xl border border-slate-800">
           <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Enrolled Site Workers</div>
           <div className="text-3xl font-extrabold text-white mt-1">{workers.length}</div>
-          <div className="text-xs text-emerald-400 mt-1 flex items-center gap-1 font-semibold">
+          <div className="text-xs text-amber-400 mt-1 flex items-center gap-1 font-semibold">
             <CheckCircle2 className="w-3.5 h-3.5" /> 100% Face vectors cached
           </div>
         </div>
 
         <div className="glass-card p-5 rounded-2xl border border-slate-800">
           <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Confirmed Present Today</div>
-          <div className="text-3xl font-extrabold text-emerald-400 mt-1">{autoConfirmedCount}</div>
+          <div className="text-3xl font-extrabold text-amber-400 mt-1">{autoConfirmedCount}</div>
           <div className="text-xs text-slate-400 mt-1">Verified via webcam AI</div>
         </div>
 
         <div className="glass-card p-5 rounded-2xl border border-slate-800">
           <div className="text-xs text-slate-400 font-bold uppercase tracking-wider">Manual Review Needed</div>
-          <div className="text-3xl font-extrabold text-amber-400 mt-1">{pendingReviewCount}</div>
+          <div className="text-3xl font-extrabold text-amber-500 mt-1">{pendingReviewCount}</div>
           <div className="text-xs text-amber-400/90 mt-1">Requires supervisor decision</div>
         </div>
 
@@ -290,13 +288,13 @@ export default function SupervisorDashboard() {
       )}
 
       {/* Live Attendees Stream Table for Current Session */}
-      <div className="glass-panel p-6 rounded-3xl border border-emerald-500/20 space-y-4 shadow-xl">
+      <div className="glass-panel p-6 rounded-3xl border border-amber-500/20 space-y-4 shadow-xl">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-bold text-white">Today's Live Attendance Log</h2>
             <p className="text-xs text-slate-400">Updates live via background polling during active site sessions</p>
           </div>
-          <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+          <span className="text-xs font-mono text-amber-400 bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20">
             {attendances.length} Records Logged
           </span>
         </div>
@@ -336,23 +334,23 @@ export default function SupervisorDashboard() {
                       {new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
                     </td>
                     <td className="py-3.5 px-4 font-mono text-xs">
-                      <span className="px-2.5 py-1 rounded-lg bg-slate-900 text-emerald-400 border border-slate-800 font-bold">
+                      <span className="px-2.5 py-1 rounded-lg bg-slate-900 text-amber-400 border border-slate-800 font-bold">
                         {att.confidence_score?.toFixed(3)}
                       </span>
                     </td>
                     <td className="py-3.5 px-4">
                       {att.status === 'auto_confirmed' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
                           Auto-Confirmed
                         </span>
                       )}
                       {att.status === 'manual_review' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-500/20 text-orange-300 border border-orange-500/40">
                           Needs Review
                         </span>
                       )}
                       {att.status === 'manual_approved' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-teal-500/20 text-teal-300 border border-teal-500/40">
+                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
                           Approved
                         </span>
                       )}

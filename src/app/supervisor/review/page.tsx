@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CheckCircle2, XCircle, AlertTriangle, ShieldCheck, RefreshCw, ArrowLeft, Eye, Sprout } from 'lucide-react'
+import { CheckCircle2, XCircle, AlertTriangle, ShieldCheck, RefreshCw, ArrowLeft, Eye, Landmark } from 'lucide-react'
 
 export default function ManualReviewQueuePage() {
   const [reviewItems, setReviewItems] = useState<any[]>([])
@@ -67,7 +67,7 @@ export default function ManualReviewQueuePage() {
         <div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-extrabold text-amber-400 flex items-center gap-1">
-              <Sprout className="w-3.5 h-3.5 text-amber-400" />
+              <Landmark className="w-3.5 h-3.5 text-amber-400" />
               Phase 3 • Site Verification
             </span>
             <span className="text-slate-600">•</span>
@@ -93,8 +93,8 @@ export default function ManualReviewQueuePage() {
           <p className="text-sm font-semibold">Loading borderline attendance review queue...</p>
         </div>
       ) : reviewItems.length === 0 ? (
-        <div className="glass-panel p-12 rounded-3xl text-center space-y-4 border border-emerald-500/20 shadow-xl">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mx-auto">
+        <div className="glass-panel p-12 rounded-3xl text-center space-y-4 border border-amber-500/20 shadow-xl">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center mx-auto">
             <CheckCircle2 className="w-7 h-7" />
           </div>
           <h3 className="text-xl font-bold text-white">Manual Review Queue Clear!</h3>
@@ -107,7 +107,7 @@ export default function ManualReviewQueuePage() {
           {reviewItems.map((item) => (
             <div
               key={item.id}
-              className="glass-panel-amber p-6 rounded-3xl border border-amber-500/40 space-y-6 shadow-2xl relative overflow-hidden"
+              className="glass-panel-gold p-6 rounded-3xl border border-amber-500/40 space-y-6 shadow-2xl relative overflow-hidden"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div className="flex items-center gap-3.5">
@@ -154,7 +154,7 @@ export default function ManualReviewQueuePage() {
                 {/* Enrolled Reference Photo */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-emerald-400 flex items-center gap-1.5">
+                    <span className="font-bold text-amber-400 flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4" /> Enrolled Reference Photo
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">Cloudinary Reference</span>
@@ -183,7 +183,7 @@ export default function ManualReviewQueuePage() {
                     value={notesInput[item.id] || ''}
                     onChange={(e) => setNotesInput({ ...notesInput, [item.id]: e.target.value })}
                     placeholder="e.g. Visually confirmed worker identity at job site"
-                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-xs focus:outline-none focus:border-amber-500"
                   />
                 </div>
               </div>
@@ -200,7 +200,7 @@ export default function ManualReviewQueuePage() {
                 <button
                   onClick={() => handleDecision(item.id, 'manual_approved')}
                   disabled={processingId === item.id}
-                  className="px-5 py-2.5 rounded-xl font-extrabold text-xs bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-950/60"
+                  className="px-5 py-2.5 rounded-xl font-extrabold text-xs bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-1.5 shadow-lg shadow-amber-950/60"
                 >
                   <CheckCircle2 className="w-4 h-4" /> Approve & Record Wage
                 </button>

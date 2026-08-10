@@ -13,7 +13,7 @@ import {
   ArrowLeft,
   Lock,
   Eye,
-  Sprout,
+  Landmark,
 } from 'lucide-react'
 import { loadFaceModels, extractFaceData, DetectedFaceResult } from '@/lib/faceApi'
 import { findBestMatch, checkLandmarkMovement, EnrolledCandidate, Point2D } from '@/lib/math'
@@ -168,15 +168,15 @@ export default function LiveAttendancePage() {
 
     if (result && result.box) {
       const { x, y, width, height } = result.box
-      // Draw Emerald bounding box
-      ctx.strokeStyle = '#10b981'
+      // Draw Neon Amber bounding box
+      ctx.strokeStyle = '#f59e0b'
       ctx.lineWidth = 3
       ctx.strokeRect(x, y, width, height)
 
       // Draw Corner Reticles
       const lineLen = 16
       ctx.lineWidth = 4
-      ctx.strokeStyle = '#34d399'
+      ctx.strokeStyle = '#fbbf24'
 
       // Top-Left
       ctx.beginPath()
@@ -207,7 +207,7 @@ export default function LiveAttendancePage() {
       ctx.stroke()
 
       // Text label above box
-      ctx.fillStyle = '#10b981'
+      ctx.fillStyle = '#f59e0b'
       ctx.font = 'bold 12px monospace'
       ctx.fillText(`AI Descriptor Dist: ${(1 - result.score).toFixed(2)}`, x, y > 20 ? y - 8 : y + 18)
     }
@@ -335,8 +335,8 @@ export default function LiveAttendancePage() {
               <ArrowLeft className="w-3.5 h-3.5" /> Dashboard
             </Link>
             <span className="text-slate-600">•</span>
-            <span className="text-xs font-extrabold text-emerald-400 flex items-center gap-1">
-              <Sprout className="w-3.5 h-3.5" /> Live Kiosk Attendance Scanner
+            <span className="text-xs font-extrabold text-amber-400 flex items-center gap-1">
+              <Landmark className="w-3.5 h-3.5" /> Live Kiosk Attendance Scanner
             </span>
           </div>
           <h1 className="text-2xl font-extrabold text-white tracking-tight mt-1">
@@ -345,8 +345,8 @@ export default function LiveAttendancePage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="px-3.5 py-1 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 flex items-center gap-1.5 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <span className="px-3.5 py-1 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
             Liveness Anti-Spoofing Active
           </span>
           <span className="px-3.5 py-1 rounded-full text-xs font-mono font-bold bg-slate-900 border border-slate-800 text-slate-300">
@@ -358,7 +358,7 @@ export default function LiveAttendancePage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left 2 Columns: Live Video Feed & Bounding Overlay */}
         <div className="lg:col-span-2 space-y-4">
-          <div className="relative rounded-3xl overflow-hidden glass-panel border border-emerald-500/30 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-2xl">
+          <div className="relative rounded-3xl overflow-hidden glass-panel border border-amber-500/30 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-2xl">
             <video
               ref={videoRef}
               autoPlay
@@ -370,8 +370,8 @@ export default function LiveAttendancePage() {
 
             {/* Scanner HUD Overlay Header */}
             <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-              <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-emerald-400 flex items-center gap-2 border border-emerald-500/40">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-amber-400 flex items-center gap-2 border border-amber-500/40">
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
                 CAM STREAM • CLIENT ML 30FPS
               </div>
               <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-slate-200 border border-slate-700">
@@ -381,22 +381,22 @@ export default function LiveAttendancePage() {
 
             {/* Match Status Card Floating Overlay */}
             {lastMatch && (
-              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl glass-panel border border-emerald-500/40 shadow-2xl flex items-center gap-4 transition-all animate-in fade-in slide-in-from-bottom-2">
+              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl glass-panel border border-amber-500/40 shadow-2xl flex items-center gap-4 transition-all animate-in fade-in slide-in-from-bottom-2">
                 <img
                   src={lastMatch.photoUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
                   alt={lastMatch.workerName}
-                  className="w-14 h-14 rounded-2xl object-cover border-2 border-emerald-500/50 shrink-0 shadow-md"
+                  className="w-14 h-14 rounded-2xl object-cover border-2 border-amber-500/50 shrink-0 shadow-md"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-extrabold text-white text-base truncate">{lastMatch.workerName}</span>
                     {lastMatch.status === 'auto_confirmed' && (
-                      <span className="px-2.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 text-[10px] font-extrabold flex items-center gap-1 border border-emerald-500/40">
+                      <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-extrabold flex items-center gap-1 border border-amber-500/40">
                         <CheckCircle2 className="w-3.5 h-3.5" /> MATCH CONFIRMED
                       </span>
                     )}
                     {lastMatch.status === 'manual_review' && (
-                      <span className="px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 text-[10px] font-extrabold flex items-center gap-1 border border-amber-500/40">
+                      <span className="px-2.5 py-0.5 rounded-md bg-orange-500/20 text-orange-300 text-[10px] font-extrabold flex items-center gap-1 border border-orange-500/40">
                         <AlertTriangle className="w-3.5 h-3.5" /> MANUAL REVIEW
                       </span>
                     )}
@@ -417,13 +417,13 @@ export default function LiveAttendancePage() {
         </div>
 
         {/* Right 1 Column: Real-Time Session Attendees Side Drawer */}
-        <div className="glass-panel p-5 rounded-3xl border border-emerald-500/20 space-y-4 flex flex-col h-[480px] shadow-xl">
+        <div className="glass-panel p-5 rounded-3xl border border-amber-500/20 space-y-4 flex flex-col h-[480px] shadow-xl">
           <div className="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
               <h2 className="font-bold text-white text-base">Session Attendees</h2>
               <p className="text-[11px] text-slate-400">Live updated every 3 sec</p>
             </div>
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-500/15 text-amber-300 border border-amber-500/30">
               {attendances.length} Logged
             </span>
           </div>
@@ -431,7 +431,7 @@ export default function LiveAttendancePage() {
           <div className="flex-1 overflow-y-auto space-y-2.5 pr-1">
             {attendances.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
-                <UserCheck className="w-10 h-10 opacity-40 text-emerald-400" />
+                <UserCheck className="w-10 h-10 opacity-40 text-amber-400" />
                 <p className="text-xs">Waiting for workers to stand in front of webcam scanner...</p>
               </div>
             ) : (
@@ -456,12 +456,12 @@ export default function LiveAttendancePage() {
 
                   <div className="text-right shrink-0">
                     {att.status === 'auto_confirmed' && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">
                         Auto
                       </span>
                     )}
                     {att.status === 'manual_review' && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-500/20 text-orange-300 border border-orange-500/30">
                         Review
                       </span>
                     )}
