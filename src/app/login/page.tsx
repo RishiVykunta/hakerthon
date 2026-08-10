@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ShieldCheck, UserCheck, Phone, Lock, ArrowRight, Sparkles } from 'lucide-react'
+import { ShieldCheck, UserCheck, Phone, Lock, ArrowRight, Sparkles, Sprout } from 'lucide-react'
 
 function LoginForm() {
   const router = useRouter()
@@ -57,63 +57,68 @@ function LoginForm() {
 
   return (
     <div className="max-w-md mx-auto py-12 space-y-6">
+      {/* Header */}
       <div className="text-center space-y-2">
-        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-400 to-teal-600 p-0.5 mx-auto shadow-lg shadow-emerald-950/50">
+        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-600 to-amber-600 p-0.5 mx-auto shadow-xl shadow-emerald-950/60">
           <div className="w-full h-full bg-slate-950 rounded-[14px] flex items-center justify-center">
             {role === 'supervisor' ? (
-              <ShieldCheck className="w-6 h-6 text-emerald-400" />
+              <ShieldCheck className="w-7 h-7 text-emerald-400" />
             ) : (
-              <UserCheck className="w-6 h-6 text-emerald-400" />
+              <UserCheck className="w-7 h-7 text-emerald-400" />
             )}
           </div>
         </div>
-        <h1 className="text-2xl font-bold text-white tracking-tight">
-          {role === 'supervisor' ? 'Supervisor Portal' : 'Worker Self-Service'}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 text-xs font-bold">
+          <Sprout className="w-3.5 h-3.5" />
+          MGNREGA Rural Portal
+        </div>
+        <h1 className="text-2xl font-extrabold text-white tracking-tight">
+          {role === 'supervisor' ? 'Site Supervisor Portal' : 'Worker Self-Service Portal'}
         </h1>
-        <p className="text-sm text-slate-400">Log in to manage site attendance & wage records</p>
+        <p className="text-xs text-slate-400">Log in to manage site attendance & wage records</p>
       </div>
 
-      {/* Role Toggle Tabs */}
-      <div className="p-1 rounded-xl bg-slate-900 border border-slate-800 flex items-center">
+      {/* Role Switcher Tabs */}
+      <div className="p-1.5 rounded-2xl bg-slate-900/90 border border-slate-800 flex items-center">
         <button
           type="button"
           onClick={() => setRole('supervisor')}
-          className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
             role === 'supervisor'
-              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/40'
+              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/60'
               : 'text-slate-400 hover:text-white'
           }`}
         >
-          <ShieldCheck className="w-3.5 h-3.5" />
+          <ShieldCheck className="w-4 h-4" />
           Supervisor Login
         </button>
         <button
           type="button"
           onClick={() => setRole('worker')}
-          className={`flex-1 py-2.5 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center justify-center gap-2 ${
             role === 'worker'
-              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/40'
+              ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-950/60'
               : 'text-slate-400 hover:text-white'
           }`}
         >
-          <UserCheck className="w-3.5 h-3.5" />
+          <UserCheck className="w-4 h-4" />
           Worker Login
         </button>
       </div>
 
       {/* Form Card */}
-      <div className="glass-panel p-6 rounded-2xl border border-slate-800 space-y-5">
+      <div className="glass-panel p-6 rounded-3xl border border-emerald-500/20 space-y-5">
         {error && (
-          <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs font-medium">
+          <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-semibold">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-slate-300">Registered Phone Number</label>
+            <label className="block text-xs font-bold text-slate-300">Registered Phone Number *</label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                 <Phone className="w-4 h-4" />
               </div>
               <input
@@ -122,16 +127,16 @@ function LoginForm() {
                 onChange={(e) => setPhone(e.target.value)}
                 required
                 placeholder="Enter 10-digit mobile number"
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
               />
             </div>
           </div>
 
           {role === 'supervisor' && (
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300">Password</label>
+              <label className="block text-xs font-bold text-slate-300">Supervisor Password *</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -140,7 +145,7 @@ function LoginForm() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="Enter supervisor password"
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
                 />
               </div>
             </div>
@@ -149,33 +154,33 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-xl font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50"
+            className="w-full py-3.5 rounded-xl font-extrabold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60"
           >
             {loading ? (
               <span className="inline-block w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
-                Continue to Dashboard
+                Continue to Portal
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
           </button>
         </form>
 
-        {/* Demo Credentials Helper Box */}
-        <div className="p-3.5 rounded-xl bg-slate-900/80 border border-emerald-500/20 space-y-2">
+        {/* Demo Credentials Box */}
+        <div className="p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/30 space-y-2">
           <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
-            <Sparkles className="w-3.5 h-3.5" /> Quick Hackathon Demo Logins:
+            <Sparkles className="w-4 h-4" /> Hackathon Demo Quick Test Logins:
           </div>
           {role === 'supervisor' ? (
-            <div className="text-xs text-slate-300 space-y-1">
-              <div>Supervisor Phone: <code className="text-emerald-300 font-mono">9876543210</code></div>
-              <div>Password: <code className="text-emerald-300 font-mono">password123</code></div>
+            <div className="text-xs text-slate-300 space-y-1 font-mono">
+              <div>Phone: <code className="text-emerald-300 font-bold">9876543210</code></div>
+              <div>Password: <code className="text-emerald-300 font-bold">password123</code></div>
             </div>
           ) : (
-            <div className="text-xs text-slate-300 space-y-1">
-              <div>Worker Ramesh Singh: <code className="text-emerald-300 font-mono">9876543211</code></div>
-              <div>Worker Sunita Devi: <code className="text-emerald-300 font-mono">9876543212</code></div>
+            <div className="text-xs text-slate-300 space-y-1 font-mono">
+              <div>Ramesh Singh: <code className="text-emerald-300 font-bold">9876543211</code></div>
+              <div>Sunita Devi: <code className="text-emerald-300 font-bold">9876543212</code></div>
             </div>
           )}
         </div>

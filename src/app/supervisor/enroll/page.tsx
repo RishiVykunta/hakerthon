@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Camera, CheckCircle2, UserCheck, RefreshCw, Sparkles, ArrowLeft, ShieldAlert, Zap } from 'lucide-react'
+import { Camera, CheckCircle2, UserCheck, RefreshCw, Sparkles, ArrowLeft, ShieldAlert, Zap, Sprout } from 'lucide-react'
 import { loadFaceModels, extractFaceData } from '@/lib/faceApi'
 
 export default function EnrollWorkerPage() {
@@ -11,7 +11,7 @@ export default function EnrollWorkerPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const [modelsReady, setModelsReady] = useState(false)
-  const [modelStatusMsg, setModelStatusMsg] = useState('Initializing Face Recognition AI...')
+  const [modelStatusMsg, setModelStatusMsg] = useState('Initializing Face Recognition Engine...')
   const [cameraActive, setCameraActive] = useState(false)
   const [extracting, setExtracting] = useState(false)
   const [extractedDescriptor, setExtractedDescriptor] = useState<number[] | null>(null)
@@ -89,11 +89,11 @@ export default function EnrollWorkerPage() {
         const faceData = await extractFaceData(canvas)
 
         if (!faceData || !faceData.descriptor) {
-          throw new Error('No face detected in webcam frame. Please align face inside the guide and try again.')
+          throw new Error('No face detected in webcam frame. Please align face inside the oval guide and try again.')
         }
 
         setExtractedDescriptor(faceData.descriptor)
-        setSuccessMsg(`Face detected! Extracted 128-dimensional vector (${faceData.score.toFixed(2)} confidence).`)
+        setSuccessMsg(`Face detected! Extracted 128-dimensional vector (${faceData.score.toFixed(2)} confidence score).`)
       }
     } catch (err: any) {
       setError(err.message || 'Face extraction failed')
@@ -159,17 +159,18 @@ export default function EnrollWorkerPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto">
       {/* Top Breadcrumb Header */}
       <div className="flex items-center justify-between">
         <button
           onClick={() => router.back()}
-          className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5"
+          className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
+          <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </button>
-        <span className="text-xs font-bold text-emerald-400 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+        <span className="text-xs font-extrabold text-emerald-400 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center gap-1">
+          <Sprout className="w-3.5 h-3.5" />
           Phase 1 • On-Device Worker Enrollment
         </span>
       </div>
@@ -177,7 +178,7 @@ export default function EnrollWorkerPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Live Webcam Viewport */}
         <div className="space-y-4">
-          <div className="relative rounded-3xl overflow-hidden glass-panel border border-slate-800 bg-slate-950 aspect-[4/3] flex items-center justify-center">
+          <div className="relative rounded-3xl overflow-hidden glass-panel border border-emerald-500/20 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-xl">
             <video
               ref={videoRef}
               autoPlay
@@ -198,14 +199,14 @@ export default function EnrollWorkerPage() {
               />
             </div>
 
-            {/* Floating Model Loading Status Badge */}
-            <div className="absolute bottom-3 left-3 right-3 px-3 py-2 rounded-xl glass-card text-xs font-medium text-slate-200 flex items-center justify-between">
+            {/* Status Badge */}
+            <div className="absolute bottom-3 left-3 right-3 px-3.5 py-2 rounded-2xl glass-card text-xs font-semibold text-slate-200 flex items-center justify-between border border-slate-800">
               <span className="flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${modelsReady ? 'bg-emerald-400 animate-ping' : 'bg-amber-400 animate-spin'}`} />
+                <span className={`w-2.5 h-2.5 rounded-full ${modelsReady ? 'bg-emerald-400 animate-ping' : 'bg-amber-400 animate-spin'}`} />
                 {modelStatusMsg}
               </span>
               {modelsReady && (
-                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded">
+                <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-full border border-emerald-500/40">
                   Client ML Active
                 </span>
               )}
@@ -216,12 +217,12 @@ export default function EnrollWorkerPage() {
             type="button"
             onClick={handleCaptureFace}
             disabled={!modelsReady || extracting}
-            className="w-full py-3.5 rounded-xl font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50"
+            className="w-full py-3.5 rounded-xl font-extrabold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60"
           >
             {extracting ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                Extracting 128-D Vector...
+                Extracting 128-D Face Vector...
               </>
             ) : (
               <>
@@ -233,21 +234,21 @@ export default function EnrollWorkerPage() {
         </div>
 
         {/* Right Column: Worker Profile Form */}
-        <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-6">
+        <div className="glass-panel p-6 rounded-3xl border border-emerald-500/20 space-y-6 shadow-xl">
           <div>
-            <h2 className="text-xl font-bold text-white">Worker Registration Details</h2>
-            <p className="text-xs text-slate-400">Stores metadata and extracted face vector in Neon PostgreSQL</p>
+            <h2 className="text-xl font-extrabold text-white">Worker Registration Form</h2>
+            <p className="text-xs text-slate-400">Stores worker profile metadata and 128-d face descriptor vector</p>
           </div>
 
           {error && (
-            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-medium flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2">
               <ShieldAlert className="w-4 h-4 shrink-0 text-rose-400" />
               {error}
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-medium flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-semibold flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
               {successMsg}
             </div>
@@ -255,76 +256,76 @@ export default function EnrollWorkerPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300">Worker Full Name *</label>
+              <label className="block text-xs font-bold text-slate-300">Worker Full Name *</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
                 placeholder="e.g. Radheshyam Yadav"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300">10-Digit Mobile Number *</label>
+              <label className="block text-xs font-bold text-slate-300">10-Digit Mobile Number *</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
                 placeholder="e.g. 9876543215"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-slate-300">Daily Wage Rate (₹) *</label>
+              <label className="block text-xs font-bold text-slate-300">Daily Wage Rate (₹) *</label>
               <input
                 type="number"
                 value={wageRate}
                 onChange={(e) => setWageRate(e.target.value)}
                 required
                 placeholder="350"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-emerald-500 transition-colors font-mono"
               />
             </div>
 
-            {/* Extracted Vector Feedback Box */}
-            <div className="p-4 rounded-2xl bg-slate-900 border border-slate-800 space-y-2">
+            {/* Extracted Vector Preview Card */}
+            <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-slate-300">Face Vector Status</span>
+                <span className="font-bold text-slate-300">128-D Vector Status</span>
                 {extractedDescriptor ? (
-                  <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold text-[10px] border border-emerald-500/30">
                     128-D Extracted
                   </span>
                 ) : (
-                  <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold text-[10px]">
-                    Pending Webcam Capture
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-[10px] border border-amber-500/30">
+                    Pending Capture
                   </span>
                 )}
               </div>
 
               {extractedDescriptor ? (
-                <div className="text-[10px] font-mono text-slate-400 truncate bg-slate-950 p-2 rounded border border-slate-800">
+                <div className="text-[10px] font-mono text-emerald-400 truncate bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                   [{extractedDescriptor.slice(0, 8).join(', ')}, ...]
                 </div>
               ) : (
-                <p className="text-xs text-slate-500">Align face inside the webcam oval guide and click "Capture & Extract".</p>
+                <p className="text-xs text-slate-400">Position face inside webcam oval guide and click "Capture & Extract".</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={loading || !extractedDescriptor}
-              className="w-full py-3.5 rounded-xl font-bold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50"
+              className="w-full py-3.5 rounded-xl font-extrabold bg-emerald-500 text-slate-950 hover:bg-emerald-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-950/60"
             >
               {loading ? (
                 <span className="inline-block w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
                   <UserCheck className="w-4 h-4" />
-                  Save & Register Worker
+                  Save & Register Worker Profile
                 </>
               )}
             </button>

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { CheckCircle2, XCircle, AlertTriangle, ShieldCheck, RefreshCw, ArrowLeft, Eye } from 'lucide-react'
+import { CheckCircle2, XCircle, AlertTriangle, ShieldCheck, RefreshCw, ArrowLeft, Eye, Sprout } from 'lucide-react'
 
 export default function ManualReviewQueuePage() {
   const [reviewItems, setReviewItems] = useState<any[]>([])
@@ -66,7 +66,10 @@ export default function ManualReviewQueuePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-amber-400">Phase 3 • Supervisor Dashboard</span>
+            <span className="text-xs font-extrabold text-amber-400 flex items-center gap-1">
+              <Sprout className="w-3.5 h-3.5 text-amber-400" />
+              Phase 3 • Site Verification
+            </span>
             <span className="text-slate-600">•</span>
             <span className="text-xs text-slate-400">Manual Review Queue</span>
           </div>
@@ -87,16 +90,16 @@ export default function ManualReviewQueuePage() {
       {loading ? (
         <div className="glass-panel p-12 rounded-3xl text-center text-slate-400 space-y-3">
           <RefreshCw className="w-6 h-6 animate-spin mx-auto text-amber-400" />
-          <p className="text-sm">Loading borderline attendance review queue...</p>
+          <p className="text-sm font-semibold">Loading borderline attendance review queue...</p>
         </div>
       ) : reviewItems.length === 0 ? (
-        <div className="glass-panel p-12 rounded-3xl text-center space-y-4 border border-slate-800">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto">
-            <CheckCircle2 className="w-6 h-6" />
+        <div className="glass-panel p-12 rounded-3xl text-center space-y-4 border border-emerald-500/20 shadow-xl">
+          <div className="w-14 h-14 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center mx-auto">
+            <CheckCircle2 className="w-7 h-7" />
           </div>
-          <h3 className="text-lg font-bold text-white">Manual Review Queue Clear!</h3>
-          <p className="text-xs text-slate-400 max-w-sm mx-auto">
-            All attendance matches for today's site session are either auto-confirmed or already reviewed.
+          <h3 className="text-xl font-bold text-white">Manual Review Queue Clear!</h3>
+          <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+            All attendance matches for today's site session are either auto-confirmed or already verified by the supervisor.
           </p>
         </div>
       ) : (
@@ -104,15 +107,15 @@ export default function ManualReviewQueuePage() {
           {reviewItems.map((item) => (
             <div
               key={item.id}
-              className="glass-panel p-6 rounded-3xl border border-amber-500/30 space-y-6 shadow-xl relative overflow-hidden"
+              className="glass-panel-amber p-6 rounded-3xl border border-amber-500/40 space-y-6 shadow-2xl relative overflow-hidden"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center font-bold">
-                    <AlertTriangle className="w-5 h-5" />
+                <div className="flex items-center gap-3.5">
+                  <div className="w-11 h-11 rounded-xl bg-amber-500/15 text-amber-400 flex items-center justify-center font-bold">
+                    <AlertTriangle className="w-6 h-6" />
                   </div>
                   <div>
-                    <div className="font-bold text-white text-lg">{item.worker?.name || 'Best Match Candidate'}</div>
+                    <div className="font-extrabold text-white text-lg">{item.worker?.name || 'Best Match Candidate'}</div>
                     <div className="text-xs text-slate-400 font-mono">
                       Logged at {new Date(item.timestamp).toLocaleTimeString()} • Phone: {item.worker?.phone}
                     </div>
@@ -123,23 +126,23 @@ export default function ManualReviewQueuePage() {
                   <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
                     Euclidean Dist: {item.confidence_score?.toFixed(3)}
                   </span>
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-900 border border-slate-700 text-slate-300">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-slate-900 border border-slate-800 text-slate-300">
                     Daily Wage: ₹{item.worker?.wage_rate_per_day || 350}
                   </span>
                 </div>
               </div>
 
-              {/* Side-by-Side Photo Comparison */}
+              {/* Side-by-Side Photo Audit */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Captured Frame */}
+                {/* Captured Frame Snapshot */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-rose-400 flex items-center gap-1">
-                      <Eye className="w-3.5 h-3.5" /> Captured Frame Snapshot
+                    <span className="font-bold text-rose-400 flex items-center gap-1.5">
+                      <Eye className="w-4 h-4" /> Captured Frame Snapshot
                     </span>
-                    <span className="text-[10px] text-slate-500">Live Webcam Frame</span>
+                    <span className="text-[10px] text-slate-400 font-mono">Live Webcam Frame</span>
                   </div>
-                  <div className="rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 aspect-[4/3] flex items-center justify-center">
+                  <div className="rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-md">
                     <img
                       src={item.snapshot_url || item.worker?.photo_url || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'}
                       alt="Captured Frame"
@@ -151,12 +154,12 @@ export default function ManualReviewQueuePage() {
                 {/* Enrolled Reference Photo */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-semibold text-emerald-400 flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5" /> Enrolled Reference Photo
+                    <span className="font-bold text-emerald-400 flex items-center gap-1.5">
+                      <ShieldCheck className="w-4 h-4" /> Enrolled Reference Photo
                     </span>
-                    <span className="text-[10px] text-slate-500">Cloudinary Record</span>
+                    <span className="text-[10px] text-slate-400 font-mono">Cloudinary Reference</span>
                   </div>
-                  <div className="rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 aspect-[4/3] flex items-center justify-center">
+                  <div className="rounded-2xl overflow-hidden border border-slate-700 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-md">
                     <img
                       src={item.worker?.photo_url || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400'}
                       alt="Enrolled Reference"
@@ -166,21 +169,21 @@ export default function ManualReviewQueuePage() {
                 </div>
               </div>
 
-              {/* Reason & Supervisor Notes Input */}
+              {/* Reason & Supervisor Verification Notes Input */}
               <div className="space-y-3 pt-2">
-                <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs text-slate-300 flex items-center gap-2">
+                <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 flex items-center gap-2">
                   <span className="font-bold text-amber-400">Review Trigger Reason:</span>
                   <span>{item.notes || 'Borderline match similarity score requires visual verification'}</span>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-xs font-semibold text-slate-400">Supervisor Verification Note (Optional)</label>
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-bold text-slate-400">Supervisor Verification Note (Optional)</label>
                   <input
                     type="text"
                     value={notesInput[item.id] || ''}
                     onChange={(e) => setNotesInput({ ...notesInput, [item.id]: e.target.value })}
-                    placeholder="e.g. Verified worker identity in-person at site"
-                    className="w-full px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-emerald-500"
+                    placeholder="e.g. Visually confirmed worker identity at job site"
+                    className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-xs focus:outline-none focus:border-emerald-500"
                   />
                 </div>
               </div>
@@ -197,7 +200,7 @@ export default function ManualReviewQueuePage() {
                 <button
                   onClick={() => handleDecision(item.id, 'manual_approved')}
                   disabled={processingId === item.id}
-                  className="px-5 py-2.5 rounded-xl font-bold text-xs bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-950/50"
+                  className="px-5 py-2.5 rounded-xl font-extrabold text-xs bg-emerald-500 text-slate-950 hover:bg-emerald-400 transition-all flex items-center gap-1.5 shadow-lg shadow-emerald-950/60"
                 >
                   <CheckCircle2 className="w-4 h-4" /> Approve & Record Wage
                 </button>
