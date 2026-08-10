@@ -19,65 +19,79 @@ import {
 
 export default function LandingPage() {
   return (
-    <div className="space-y-16 py-4 max-w-7xl mx-auto">
-      {/* Hero Banner */}
-      <section className="relative overflow-hidden rounded-3xl glass-panel p-8 sm:p-12 border border-slate-200 shadow-xl">
-        <div className="relative z-10 max-w-3xl space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-300 text-slate-800 text-xs font-extrabold shadow-sm">
-            <Landmark className="w-4 h-4 text-slate-700" />
-            Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
-          </div>
+    <div className="space-y-16 py-6 max-w-7xl mx-auto">
+      {/* Executive Centered Hero Section */}
+      <section className="glass-panel p-8 sm:p-14 rounded-3xl border border-slate-200 shadow-xl text-center space-y-6 max-w-5xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-extrabold shadow-sm mx-auto">
+          <Landmark className="w-4 h-4 text-amber-600" />
+          Hackathon Priority PS 9 • Agro-Tech & Rural Development Portal
+        </div>
 
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
-            AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
-          </h1>
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 leading-[1.2] max-w-4xl mx-auto">
+          AI Face Recognition Attendance & Wage Fraud Prevention for MGNREGA Job Sites
+        </h1>
+
+        {/* Feature Highlights Ribbon */}
+        <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-700">
+          <span className="px-3.5 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200 flex items-center gap-1.5 shadow-sm">
+            <Cpu className="w-4 h-4 text-amber-600" /> 100% Client ML Recognition
+          </span>
+          <span className="px-3.5 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200 flex items-center gap-1.5 shadow-sm">
+            <ShieldCheck className="w-4 h-4 text-emerald-600" /> Anti-Spoofing Liveness Check
+          </span>
+          <span className="px-3.5 py-1.5 rounded-xl bg-slate-100/90 border border-slate-200 flex items-center gap-1.5 shadow-sm">
+            <FileSpreadsheet className="w-4 h-4 text-amber-600" /> Instant CSV Wage Export
+          </span>
         </div>
       </section>
 
-
       {/* 4-Phase System Architecture Workflow */}
-      <section className="space-y-8">
+      <section className="space-y-8 max-w-6xl mx-auto">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">End-to-End System Workflow</h2>
-          <p className="text-sm text-slate-600">Designed for non-tech supervisors using mobile devices and webcams at rural job sites</p>
+          <p className="text-sm text-slate-600 font-medium">Designed for non-tech supervisors using mobile devices and webcams at rural job sites</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-amber-600 uppercase tracking-wider">Phase 1</div>
-            <div className="font-bold text-slate-900 flex items-center gap-2 text-base">
-              <UserCheck className="w-5 h-5 text-amber-600" /> Worker Enrollment
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="p-6 rounded-3xl glass-card space-y-3.5 border border-slate-200/90 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold text-amber-900 uppercase tracking-wider bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">Phase 01</span>
+              <UserCheck className="w-5 h-5 text-amber-600" />
             </div>
+            <h3 className="font-extrabold text-slate-900 text-base">Worker Enrollment</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Captures baseline reference photo and extracts 128-d face descriptor vector stored in Neon PostgreSQL.
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-orange-600 uppercase tracking-wider">Phase 2</div>
-            <div className="font-bold text-slate-900 flex items-center gap-2 text-base">
-              <Camera className="w-5 h-5 text-orange-600" /> Real-Time Kiosk Scan
+          <div className="p-6 rounded-3xl glass-card space-y-3.5 border border-slate-200/90 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold text-orange-900 uppercase tracking-wider bg-orange-100 px-2.5 py-0.5 rounded-full border border-orange-300">Phase 02</span>
+              <Camera className="w-5 h-5 text-orange-600" />
             </div>
+            <h3 className="font-extrabold text-slate-900 text-base">Real-Time Kiosk Scan</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Webcam matches faces with Euclidean distance threshold &lt;0.5 for instant auto-confirmation.
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-amber-600 uppercase tracking-wider">Phase 3</div>
-            <div className="font-bold text-slate-900 flex items-center gap-2 text-base">
-              <AlertTriangle className="w-5 h-5 text-amber-600" /> Manual Review Queue
+          <div className="p-6 rounded-3xl glass-card space-y-3.5 border border-slate-200/90 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold text-amber-900 uppercase tracking-wider bg-amber-100 px-2.5 py-0.5 rounded-full border border-amber-300">Phase 03</span>
+              <AlertTriangle className="w-5 h-5 text-amber-600" />
             </div>
+            <h3 className="font-extrabold text-slate-900 text-base">Manual Review Queue</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Borderline matches (0.50 - 0.65) and failed liveness checks are held for side-by-side supervisor audit.
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl glass-card space-y-3">
-            <div className="text-xs font-extrabold text-orange-600 uppercase tracking-wider">Phase 4</div>
-            <div className="font-bold text-slate-900 flex items-center gap-2 text-base">
-              <FileSpreadsheet className="w-5 h-5 text-orange-600" /> Wage & CSV Audit Export
+          <div className="p-6 rounded-3xl glass-card space-y-3.5 border border-slate-200/90 shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold text-orange-900 uppercase tracking-wider bg-orange-100 px-2.5 py-0.5 rounded-full border border-orange-300">Phase 04</span>
+              <FileSpreadsheet className="w-5 h-5 text-orange-600" />
             </div>
+            <h3 className="font-extrabold text-slate-900 text-base">Wage & CSV Export</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
               Computes total daily payouts (`days_present * wage_rate`), generates official CSV reports, and logs audit trail.
             </p>
@@ -85,28 +99,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Demo Credentials Quick Callout */}
-      <section className="glass-panel p-8 rounded-3xl border border-amber-300 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-800 border border-amber-300">
-              Ready for Hackathon Jury Demo
-            </span>
+      {/* Demo Credentials Quick Callout Banner */}
+      <section className="glass-panel p-8 rounded-3xl border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl max-w-6xl mx-auto">
+        <div className="space-y-1.5 text-center md:text-left">
+          <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+            Ready for Hackathon Jury Demo
           </div>
           <h3 className="text-xl font-extrabold text-slate-900">Experience Live Recognition & Wage Auditing</h3>
           <p className="text-xs text-slate-600 font-medium">Pre-enrolled demo workers ready for instant webcam facial verification testing.</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <Link
             href="/login?role=supervisor"
-            className="px-5 py-3 rounded-xl text-xs font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-lg shadow-amber-500/20"
+            className="px-5 py-3 rounded-xl text-xs font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-md shadow-amber-500/20 hover:scale-[1.02]"
           >
             Supervisor Login Demo
           </Link>
           <Link
             href="/login?role=worker"
-            className="px-5 py-3 rounded-xl text-xs font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 shadow-sm transition-all"
+            className="px-5 py-3 rounded-xl text-xs font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 shadow-sm transition-all hover:scale-[1.02]"
           >
             Worker Self-Service Demo
           </Link>
