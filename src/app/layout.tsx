@@ -28,22 +28,22 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} dark`}>
-      <body className="font-sans bg-[#030712] text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
+    <html lang="en" className={`${plusJakartaSans.variable} ${jetbrainsMono.variable} light`}>
+      <body className="font-sans bg-[#f8fafc] text-slate-900 min-h-screen flex flex-col antialiased selection:bg-amber-500 selection:text-slate-950">
         <Navbar />
         <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {children}
         </main>
-        <footer className="border-t border-slate-800/60 bg-[#030712]/90 backdrop-blur-md py-5 text-xs text-slate-400">
+        <footer className="border-t border-slate-200/80 bg-white/90 backdrop-blur-md py-5 text-xs text-slate-600">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-emerald-400">GreenGrid AI Portal</span>
-              <span className="text-slate-600">•</span>
+              <span className="font-bold text-amber-600">GreenGrid AI Portal</span>
+              <span className="text-slate-300">•</span>
               <span>MGNREGA Rural Workfare Technology Stack</span>
             </div>
-            <div className="flex items-center gap-4 text-slate-400 font-mono text-[11px]">
-              <span className="inline-flex items-center gap-1.5 text-emerald-400">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <div className="flex items-center gap-4 text-slate-500 font-mono text-[11px]">
+              <span className="inline-flex items-center gap-1.5 text-emerald-600 font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
                 Vercel Serverless Ready
               </span>
               <span>•</span>

@@ -164,13 +164,13 @@ export default function EnrollWorkerPage() {
       <div className="flex items-center justify-between">
         <button
           onClick={() => router.back()}
-          className="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-slate-300 hover:text-white flex items-center gap-1.5"
+          className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-700 hover:text-slate-900 shadow-sm flex items-center gap-1.5"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </button>
-        <span className="text-xs font-extrabold text-amber-400 px-3.5 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 flex items-center gap-1">
-          <Landmark className="w-3.5 h-3.5 text-amber-400" />
+        <span className="text-xs font-extrabold text-amber-900 px-3.5 py-1 rounded-full bg-amber-100 border border-amber-300 flex items-center gap-1 shadow-sm">
+          <Landmark className="w-3.5 h-3.5 text-amber-600" />
           Phase 1 • On-Device Worker Enrollment
         </span>
       </div>
@@ -178,7 +178,7 @@ export default function EnrollWorkerPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Left Column: Live Webcam Viewport */}
         <div className="space-y-4">
-          <div className="relative rounded-3xl overflow-hidden glass-panel border border-amber-500/20 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-xl">
+          <div className="relative rounded-3xl overflow-hidden glass-panel border border-slate-200 bg-slate-950 aspect-[4/3] flex items-center justify-center shadow-xl">
             <video
               ref={videoRef}
               autoPlay
@@ -193,20 +193,20 @@ export default function EnrollWorkerPage() {
               <div
                 className={`w-48 h-64 rounded-[50%] border-2 border-dashed transition-colors ${
                   extractedDescriptor
-                    ? 'border-amber-400 bg-amber-500/10 shadow-lg shadow-amber-500/20'
-                    : 'border-amber-500/50 animate-pulse'
+                    ? 'border-amber-400 bg-amber-500/20 shadow-lg shadow-amber-500/30'
+                    : 'border-amber-400/70 animate-pulse'
                 }`}
               />
             </div>
 
             {/* Status Badge */}
-            <div className="absolute bottom-3 left-3 right-3 px-3.5 py-2 rounded-2xl glass-card text-xs font-semibold text-slate-200 flex items-center justify-between border border-slate-800">
+            <div className="absolute bottom-3 left-3 right-3 px-3.5 py-2 rounded-2xl glass-card text-xs font-semibold text-slate-800 flex items-center justify-between border border-slate-200">
               <span className="flex items-center gap-2">
-                <span className={`w-2.5 h-2.5 rounded-full ${modelsReady ? 'bg-amber-400 animate-ping' : 'bg-orange-400 animate-spin'}`} />
+                <span className={`w-2.5 h-2.5 rounded-full ${modelsReady ? 'bg-amber-500 animate-ping' : 'bg-orange-500 animate-spin'}`} />
                 {modelStatusMsg}
               </span>
               {modelsReady && (
-                <span className="text-[10px] bg-amber-500/20 text-amber-300 font-bold px-2 py-0.5 rounded-full border border-amber-500/40">
+                <span className="text-[10px] bg-amber-100 text-amber-900 font-bold px-2 py-0.5 rounded-full border border-amber-300">
                   Client ML Active
                 </span>
               )}
@@ -217,7 +217,7 @@ export default function EnrollWorkerPage() {
             type="button"
             onClick={handleCaptureFace}
             disabled={!modelsReady || extracting}
-            className="w-full py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-950/60"
+            className="w-full py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20"
           >
             {extracting ? (
               <>
@@ -234,91 +234,91 @@ export default function EnrollWorkerPage() {
         </div>
 
         {/* Right Column: Worker Profile Form */}
-        <div className="glass-panel p-6 rounded-3xl border border-amber-500/20 space-y-6 shadow-xl">
+        <div className="glass-panel p-6 rounded-3xl border border-slate-200 space-y-6 shadow-xl">
           <div>
-            <h2 className="text-xl font-extrabold text-white">Worker Registration Form</h2>
-            <p className="text-xs text-slate-400">Stores worker profile metadata and 128-d face descriptor vector</p>
+            <h2 className="text-xl font-extrabold text-slate-900">Worker Registration Form</h2>
+            <p className="text-xs text-slate-600 font-medium">Stores worker profile metadata and 128-d face descriptor vector</p>
           </div>
 
           {error && (
-            <div className="p-3.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-semibold flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 shrink-0 text-rose-400" />
+            <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 shrink-0 text-rose-600" />
               {error}
             </div>
           )}
 
           {successMsg && (
-            <div className="p-3.5 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-400" />
+            <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs font-semibold flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 shrink-0 text-amber-600" />
               {successMsg}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-300">Worker Full Name *</label>
+              <label className="block text-xs font-bold text-slate-700">Worker Full Name *</label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
                 placeholder="e.g. Radheshyam Yadav"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors shadow-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-300">10-Digit Mobile Number *</label>
+              <label className="block text-xs font-bold text-slate-700">10-Digit Mobile Number *</label>
               <input
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 required
                 placeholder="e.g. 9876543215"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors font-mono shadow-sm"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-slate-300">Daily Wage Rate (₹) *</label>
+              <label className="block text-xs font-bold text-slate-700">Daily Wage Rate (₹) *</label>
               <input
                 type="number"
                 value={wageRate}
                 onChange={(e) => setWageRate(e.target.value)}
                 required
                 placeholder="350"
-                className="w-full px-4 py-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-white text-sm focus:outline-none focus:border-amber-500 transition-colors font-mono"
+                className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors font-mono shadow-sm"
               />
             </div>
 
             {/* Extracted Vector Preview Card */}
-            <div className="p-4 rounded-2xl bg-slate-900/90 border border-slate-800 space-y-2">
+            <div className="p-4 rounded-2xl bg-slate-100/90 border border-slate-200 space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-slate-300">128-D Vector Status</span>
+                <span className="font-bold text-slate-700">128-D Vector Status</span>
                 {extractedDescriptor ? (
-                  <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-[10px] border border-amber-500/30">
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-900 font-extrabold text-[10px] border border-amber-300">
                     128-D Extracted
                   </span>
                 ) : (
-                  <span className="px-2.5 py-0.5 rounded-full bg-orange-500/20 text-orange-300 font-extrabold text-[10px] border border-orange-500/30">
+                  <span className="px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-900 font-extrabold text-[10px] border border-orange-300">
                     Pending Capture
                   </span>
                 )}
               </div>
 
               {extractedDescriptor ? (
-                <div className="text-[10px] font-mono text-amber-400 truncate bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <div className="text-[10px] font-mono text-amber-800 truncate bg-white p-2.5 rounded-xl border border-slate-200">
                   [{extractedDescriptor.slice(0, 8).join(', ')}, ...]
                 </div>
               ) : (
-                <p className="text-xs text-slate-400">Position face inside webcam oval guide and click "Capture & Extract".</p>
+                <p className="text-xs text-slate-500 font-medium">Position face inside webcam oval guide and click "Capture & Extract".</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={loading || !extractedDescriptor}
-              className="w-full py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-950/60"
+              className="w-full py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20"
             >
               {loading ? (
                 <span className="inline-block w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin" />
