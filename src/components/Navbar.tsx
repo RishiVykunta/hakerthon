@@ -40,10 +40,17 @@ export default function Navbar() {
   const handleLogout = async () => {
     await fetch('/api/auth/logout', { method: 'POST' })
     setUser(null)
-    router.push('/login')
+    window.location.href = '/login'
   }
 
-  const supervisorNavItems = [
+  type NavItem = {
+    label: string
+    href: string
+    icon: any
+    highlight?: boolean
+  }
+
+  const supervisorNavItems: NavItem[] = [
     { label: 'Dashboard', href: '/supervisor/dashboard', icon: Home },
     { label: 'Enroll Worker', href: '/supervisor/enroll', icon: UserCheck },
     { label: 'Live Kiosk', href: '/supervisor/session/live', icon: Camera, highlight: true },
@@ -51,11 +58,24 @@ export default function Navbar() {
     { label: 'Reports / Wage CSV', href: '/supervisor/export', icon: FileSpreadsheet },
   ]
 
+  const workerNavItems: NavItem[] = [
+    { label: 'My Dashboard', href: '/worker/dashboard', icon: Home },
+  ]
+
+  const isSupervisorRoute = pathname.startsWith('/supervisor')
+  const isWorkerRoute = pathname.startsWith('/worker')
+
+  const navItems: NavItem[] = (isSupervisorRoute && user?.role === 'supervisor')
+    ? supervisorNavItems
+    : (isWorkerRoute && user?.role === 'worker')
+      ? workerNavItems
+      : []
+
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo & Tagline */}
-        <Link href="/" className="flex items-center gap-3 group shrink-0">
+        <Link href={user ? (user.role === 'supervisor' ? '/supervisor/dashboard' : '/worker/dashboard') : '/'} className="flex items-center gap-3 group shrink-0">
           <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center border border-slate-800 shadow-sm group-hover:border-amber-500 transition-colors">
             <Camera className="w-4 h-4 text-amber-500" />
           </div>
@@ -77,7 +97,7 @@ export default function Navbar() {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-1">
-          {supervisorNavItems.map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
             return (
@@ -105,7 +125,7 @@ export default function Navbar() {
                 <div className="text-xs font-extrabold text-slate-900 leading-none">{user.name}</div>
                 <div className="text-[10px] text-slate-500 font-semibold flex items-center gap-1 justify-end mt-1">
                   <ShieldCheck className="w-3 h-3 text-amber-600" />
-                  Site Supervisor
+                  {user.role === 'supervisor' ? 'Site Supervisor' : 'Registered Worker'}
                 </div>
               </div>
               <button
@@ -148,7 +168,7 @@ export default function Navbar() {
       {/* Mobile Collapsible Dropdown Navigation Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 py-3 space-y-1 shadow-lg">
-          {supervisorNavItems.map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon
             const isActive = pathname === item.href
             return (

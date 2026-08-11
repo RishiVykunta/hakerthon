@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   Camera,
@@ -10,9 +11,27 @@ import {
   UserCheck,
   AlertCircle,
   FileSpreadsheet,
+  ArrowRight,
 } from 'lucide-react'
 
 export default function LandingPage() {
+  const [user, setUser] = useState<{ name: string; role: 'supervisor' | 'worker' } | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          setUser(data.user)
+        } else {
+          setUser(null)
+        }
+      })
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false))
+  }, [])
+
   return (
     <div className="py-6 max-w-6xl mx-auto space-y-12">
       {/* HERO SECTION */}
@@ -33,7 +52,7 @@ export default function LandingPage() {
           Verify workers, reduce proxy attendance, and maintain accurate attendance and wage records with AI-powered face recognition.
         </p>
 
-        {/* Exactly Three Hero Feature Badges */}
+        {/* Hero Feature Badges */}
         <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-700">
           <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 flex items-center gap-1.5 shadow-2xs">
             <Cpu className="w-3.5 h-3.5 text-amber-600" /> AI Face Verification
@@ -48,19 +67,35 @@ export default function LandingPage() {
 
         {/* Hero Action Buttons */}
         <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href="/supervisor/session/live"
-            className="px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
-          >
-            <Camera className="w-4 h-4 text-slate-950" />
-            Launch Live Kiosk →
-          </Link>
-          <Link
-            href="/supervisor/dashboard"
-            className="px-6 py-3.5 rounded-xl font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 hover:border-slate-400 shadow-2xs transition-all flex items-center gap-2"
-          >
-            View Dashboard
-          </Link>
+          {loading ? (
+            <div className="text-xs text-slate-400 py-3 font-semibold">Loading portal options...</div>
+          ) : user ? (
+            <Link
+              href={user.role === 'supervisor' ? '/supervisor/dashboard' : '/worker/dashboard'}
+              className="px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
+            >
+              <ShieldCheck className="w-4 h-4 text-slate-950" />
+              Go to {user.role === 'supervisor' ? 'Supervisor Dashboard' : 'Worker Dashboard'}
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login?role=supervisor"
+                className="px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
+              >
+                <ShieldCheck className="w-4 h-4 text-slate-950" />
+                Supervisor Portal Login
+              </Link>
+              <Link
+                href="/login?role=worker"
+                className="px-6 py-3.5 rounded-xl font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 hover:border-slate-400 shadow-2xs transition-all flex items-center gap-2"
+              >
+                <UserCheck className="w-4 h-4 text-slate-700" />
+                Worker Self-Service Login
+              </Link>
+            </>
+          )}
         </div>
       </section>
 
@@ -86,7 +121,7 @@ export default function LandingPage() {
             </div>
             <h3 className="font-extrabold text-slate-900 text-base">Worker Enrollment</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              Register workers and securely enroll their face for verification.
+              Register workers and securely enroll their face descriptor vectors on-site.
             </p>
           </div>
 
@@ -98,9 +133,9 @@ export default function LandingPage() {
               </span>
               <Camera className="w-4 h-4 text-orange-600" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-base">AI Attendance</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">AI Attendance Kiosk</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              Verify workers in real time and automatically record attendance.
+              Verify workers in real time via live webcam face recognition scanner.
             </p>
           </div>
 
@@ -114,7 +149,7 @@ export default function LandingPage() {
             </div>
             <h3 className="font-extrabold text-slate-900 text-base">Review & Verification</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              Send uncertain matches to the supervisor for manual verification.
+              Send uncertain matches and low attendance flags to supervisor manual review.
             </p>
           </div>
 
@@ -126,9 +161,9 @@ export default function LandingPage() {
               </span>
               <FileSpreadsheet className="w-4 h-4 text-orange-600" />
             </div>
-            <h3 className="font-extrabold text-slate-900 text-base">Wage Records</h3>
+            <h3 className="font-extrabold text-slate-900 text-base">Wage Records & Export</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
-              Maintain attendance-based wage records and export reports.
+              Maintain attendance-based wage records and export official CSV reports.
             </p>
           </div>
         </div>
@@ -136,3 +171,4 @@ export default function LandingPage() {
     </div>
   )
 }
+

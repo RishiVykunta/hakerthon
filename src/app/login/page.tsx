@@ -16,6 +16,17 @@ function LoginForm() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated) {
+          window.location.href = data.user.role === 'supervisor' ? '/supervisor/dashboard' : '/worker/dashboard'
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  useEffect(() => {
     if (role === 'supervisor') {
       setPhone('9876543210')
       setPassword('password123')
@@ -43,14 +54,14 @@ function LoginForm() {
         throw new Error(data.error || 'Login failed')
       }
 
+      // Hard navigation ensures cookies sync and Navbar updates cleanly
       if (role === 'supervisor') {
-        router.push('/supervisor/dashboard')
+        window.location.href = '/supervisor/dashboard'
       } else {
-        router.push('/worker/dashboard')
+        window.location.href = '/worker/dashboard'
       }
     } catch (err: any) {
       setError(err.message || 'Authentication failed')
-    } finally {
       setLoading(false)
     }
   }
