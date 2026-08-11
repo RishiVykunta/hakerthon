@@ -3,6 +3,33 @@ import { prisma } from '@/lib/prisma'
 import { mockStore, MockAttendance } from '@/lib/store'
 import { getAuthUser } from '@/lib/auth'
 
+function syncMockAttendance(att: any) {
+  if (!att) return
+  const existingIdx = mockStore.attendances.findIndex(
+    (a) => a.session_id === att.session_id && a.worker_id === att.worker_id
+  )
+  const mockAtt: MockAttendance = {
+    id: att.id,
+    worker_id: att.worker_id,
+    session_id: att.session_id,
+    timestamp: att.timestamp ? new Date(att.timestamp).toISOString() : new Date().toISOString(),
+    in_time: att.in_time ? new Date(att.in_time).toISOString() : new Date().toISOString(),
+    out_time: att.out_time ? new Date(att.out_time).toISOString() : null,
+    total_hours: att.total_hours || null,
+    type: att.out_time ? 'CHECK_OUT' : 'CHECK_IN',
+    confidence_score: att.confidence_score || 0.35,
+    status: att.status,
+    snapshot_url: att.snapshot_url || null,
+    notes: att.notes || null,
+    created_at: att.created_at ? new Date(att.created_at).toISOString() : new Date().toISOString(),
+  }
+  if (existingIdx !== -1) {
+    mockStore.attendances[existingIdx] = mockAtt
+  } else {
+    mockStore.attendances.unshift(mockAtt)
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
@@ -58,6 +85,8 @@ export async function POST(req: Request) {
           })
         }
 
+        syncMockAttendance(updated)
+
         return NextResponse.json({
           success: true,
           action: 'check_out',
@@ -76,6 +105,7 @@ export async function POST(req: Request) {
           },
           include: { worker: true },
         })
+        syncMockAttendance(updated)
         return NextResponse.json({
           success: true,
           action: 'check_in',
@@ -96,6 +126,8 @@ export async function POST(req: Request) {
         },
         include: { worker: true },
       })
+
+      syncMockAttendance(attendance)
 
       return NextResponse.json({
         success: true,
@@ -211,6 +243,7 @@ export async function PATCH(req: Request) {
         },
         include: { worker: true },
       })
+      syncMockAttendance(updated)
       return NextResponse.json({ success: true, attendance: updated })
     } catch (dbErr) {
       const mockAtt = mockStore.attendances.find((a) => a.id === attendance_id)

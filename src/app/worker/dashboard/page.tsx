@@ -20,6 +20,8 @@ export default function WorkerDashboardPage() {
       }
     }
     loadWorkerDashboard()
+    const interval = setInterval(loadWorkerDashboard, 3000)
+    return () => clearInterval(interval)
   }, [])
 
   if (loading) {

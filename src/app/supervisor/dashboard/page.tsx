@@ -79,6 +79,10 @@ export default function SupervisorDashboard() {
 
   useEffect(() => {
     fetchData()
+    const interval = setInterval(() => {
+      fetchData()
+    }, 3000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleToggleSession = async () => {
