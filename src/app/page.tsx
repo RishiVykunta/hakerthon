@@ -66,13 +66,13 @@ export default function LandingPage() {
         </div>
 
         {/* Hero Action Buttons */}
-        <div className="pt-3 flex flex-wrap items-center justify-center gap-3">
+        <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto max-w-md mx-auto">
           {loading ? (
             <div className="text-xs text-slate-400 py-3 font-semibold">Loading portal options...</div>
           ) : user ? (
             <Link
               href={user.role === 'supervisor' ? '/supervisor/dashboard' : '/worker/dashboard'}
-              className="px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
             >
               <ShieldCheck className="w-4 h-4 text-slate-950" />
               Go to {user.role === 'supervisor' ? 'Supervisor Dashboard' : 'Worker Dashboard'}
@@ -82,14 +82,14 @@ export default function LandingPage() {
             <>
               <Link
                 href="/login?role=supervisor"
-                className="px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
               >
                 <ShieldCheck className="w-4 h-4 text-slate-950" />
                 Supervisor Portal Login
               </Link>
               <Link
                 href="/login?role=worker"
-                className="px-6 py-3.5 rounded-xl font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 hover:border-slate-400 shadow-2xs transition-all flex items-center gap-2"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-bold bg-white text-slate-800 hover:text-slate-900 border border-slate-300 hover:border-slate-400 shadow-2xs transition-all flex items-center justify-center gap-2"
               >
                 <UserCheck className="w-4 h-4 text-slate-700" />
                 Worker Self-Service Login
