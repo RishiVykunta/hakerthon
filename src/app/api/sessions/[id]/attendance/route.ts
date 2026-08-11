@@ -10,22 +10,28 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       where: { session_id: id },
       include: {
         worker: {
-          select: { id: true, name: true, phone: true, photo_url: true, wage_rate_per_day: true },
+          select: { id: true, name: true, phone: true, photo_url: true, wage_rate_per_day: true, site_id: true },
         },
       },
       orderBy: { timestamp: 'desc' },
     })
 
-    return NextResponse.json({ attendances, count: attendances.length })
+    const validAttendances = attendances.filter((a: any) => a.worker != null)
+
+    return NextResponse.json({ attendances: validAttendances, count: validAttendances.length })
   } catch (err) {
-    const mockAtts = mockStore.attendances.filter((a) => a.session_id === id)
-    const formattedMock = mockAtts.map((a) => {
-      const worker = mockStore.workers.find((w) => w.id === a.worker_id)
-      return {
-        ...a,
-        worker: worker || { id: a.worker_id, name: 'Worker ' + a.worker_id, phone: 'N/A', photo_url: null, wage_rate_per_day: 350 },
-      }
-    })
-    return NextResponse.json({ attendances: formattedMock, count: formattedMock.length, fallback: true })
+    const validMockAtts = mockStore.attendances
+      .filter((a) => a.session_id === id)
+      .map((a) => {
+        const worker = mockStore.workers.find((w) => w.id === a.worker_id)
+        if (!worker) return null
+        return {
+          ...a,
+          worker,
+        }
+      })
+      .filter((a): a is NonNullable<typeof a> => a !== null)
+
+    return NextResponse.json({ attendances: validMockAtts, count: validMockAtts.length, fallback: true })
   }
 }
