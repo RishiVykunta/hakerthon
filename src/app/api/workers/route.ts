@@ -77,3 +77,35 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: (err as Error).message || 'Failed to fetch workers' }, { status: 500 })
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
+
+    if (!id) {
+      return NextResponse.json({ error: 'Worker ID is required' }, { status: 400 })
+    }
+
+    try {
+      await prisma.attendance.deleteMany({ where: { worker_id: id } })
+      await prisma.wageRecord.deleteMany({ where: { worker_id: id } })
+
+      const deletedWorker = await prisma.worker.delete({
+        where: { id },
+      })
+      return NextResponse.json({ success: true, message: `Worker ${deletedWorker.name} removed successfully`, id })
+    } catch (dbErr) {
+      const index = mockStore.workers.findIndex((w) => w.id === id)
+      if (index !== -1) {
+        const removed = mockStore.workers.splice(index, 1)[0]
+        mockStore.attendances = mockStore.attendances.filter((a) => a.worker_id !== id)
+        mockStore.wageRecords = mockStore.wageRecords.filter((wr) => wr.worker_id !== id)
+        return NextResponse.json({ success: true, message: `Worker ${removed.name} removed successfully`, id, fallback: true })
+      }
+      return NextResponse.json({ error: 'Worker not found' }, { status: 404 })
+    }
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to remove worker' }, { status: 500 })
+  }
+}
