@@ -53,6 +53,25 @@ export async function POST(req: Request) {
           site_id: targetSiteId,
         },
       })
+
+      // Sync with in-memory store
+      const formattedMock: MockWorker = {
+        id: newWorker.id,
+        name: newWorker.name,
+        phone: newWorker.phone,
+        photo_url: newWorker.photo_url,
+        face_descriptor: face_descriptor,
+        wage_rate_per_day: newWorker.wage_rate_per_day,
+        site_id: newWorker.site_id,
+        created_at: newWorker.created_at.toISOString(),
+      }
+      const existingIdx = mockStore.workers.findIndex((w) => w.id === newWorker.id || w.phone === newWorker.phone)
+      if (existingIdx !== -1) {
+        mockStore.workers[existingIdx] = formattedMock
+      } else {
+        mockStore.workers.unshift(formattedMock)
+      }
+
       return NextResponse.json({ success: true, worker: newWorker })
     } catch (dbErr: any) {
       // Duplicate key or fallback handling
@@ -100,11 +119,22 @@ export async function PUT(req: Request) {
         },
       })
 
+      const descriptorArr = Array.isArray(updatedWorker.face_descriptor)
+        ? (updatedWorker.face_descriptor as number[])
+        : JSON.parse(String(updatedWorker.face_descriptor || '[]'))
+
       const formatted = {
         ...updatedWorker,
-        face_descriptor: Array.isArray(updatedWorker.face_descriptor)
-          ? (updatedWorker.face_descriptor as number[])
-          : JSON.parse(String(updatedWorker.face_descriptor || '[]')),
+        face_descriptor: descriptorArr,
+      }
+
+      // Sync mockStore
+      const mockW = mockStore.workers.find((w) => w.id === id)
+      if (mockW) {
+        mockW.name = name
+        mockW.phone = phone
+        mockW.wage_rate_per_day = wageRate
+        if (photo_url) mockW.photo_url = photo_url
       }
 
       return NextResponse.json({ success: true, worker: formatted })
@@ -144,6 +174,12 @@ export async function DELETE(req: Request) {
       const deletedWorker = await prisma.worker.delete({
         where: { id },
       })
+
+      // Sync mockStore deletion
+      mockStore.workers = mockStore.workers.filter((w) => w.id !== id)
+      mockStore.attendances = mockStore.attendances.filter((a) => a.worker_id !== id)
+      mockStore.wageRecords = mockStore.wageRecords.filter((wr) => wr.worker_id !== id)
+
       return NextResponse.json({ success: true, message: `Worker ${deletedWorker.name} removed successfully`, id })
     } catch (dbErr) {
       const index = mockStore.workers.findIndex((w) => w.id === id)

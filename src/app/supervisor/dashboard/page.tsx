@@ -181,22 +181,31 @@ export default function SupervisorDashboard() {
     return w.name?.toLowerCase().includes(q) || w.phone?.includes(q)
   })
 
+  const autoConfirmedCount = attendances.filter(
+    (a) => a.status === 'auto_confirmed' || a.status === 'manual_approved'
+  ).length
   const pendingReviewCount = attendances.filter((a) => a.status === 'manual_review').length
-  const autoConfirmedCount = attendances.filter((a) => a.status === 'auto_confirmed' || a.status === 'manual_approved').length
-  const totalWagePayoutToday = autoConfirmedCount * 350
+  const totalWagePayoutToday = attendances
+    .filter((a) => a.status === 'auto_confirmed' || a.status === 'manual_approved')
+    .reduce((sum, att) => {
+      const hours = att.total_hours || (att.out_time ? 8.0 : 8.0)
+      const rate = att.worker?.wage_rate_per_day || 350
+      return sum + Math.round((hours / 8.0) * rate)
+    }, 0)
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
-      {/* Site Top Header & Active Session Control */}
-      <div className="glass-panel p-6 rounded-3xl border border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-xl">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5 shadow-sm">
+    <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-xs font-bold text-amber-900 px-3 py-0.5 rounded-full bg-amber-100 border border-amber-300 flex items-center gap-1 shadow-2xs">
               <Landmark className="w-3.5 h-3.5 text-amber-600" />
-              Active Job Site: Rampur Panchayat #4
+              Worksite #4 (Rampur)
             </span>
+            <span className="text-slate-300">•</span>
             {session?.status === 'active' ? (
-              <span className="inline-flex items-center gap-1.5 text-xs font-extrabold text-amber-900 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 shadow-sm">
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-900 px-3 py-0.5 rounded-full bg-amber-100 border border-amber-300 shadow-2xs">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping" />
                 ATTENDANCE SESSION ACTIVE
               </span>
@@ -272,7 +281,7 @@ export default function SupervisorDashboard() {
         <div className="glass-card p-5 rounded-2xl border border-slate-200">
           <div className="text-xs text-slate-500 font-bold uppercase tracking-wider">Computed Daily Payout</div>
           <div className="text-3xl font-extrabold text-slate-900 mt-1">₹{totalWagePayoutToday.toLocaleString('en-IN')}</div>
-          <div className="text-xs text-slate-600 mt-1 font-medium">Standard ₹350/day wage rate</div>
+          <div className="text-xs text-slate-600 mt-1 font-medium">Based on hours worked & wage rates</div>
         </div>
       </div>
 
