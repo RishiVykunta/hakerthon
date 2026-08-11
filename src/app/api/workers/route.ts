@@ -78,6 +78,56 @@ export async function POST(req: Request) {
   }
 }
 
+export async function PUT(req: Request) {
+  try {
+    const body = await req.json()
+    const { id, name, phone, wage_rate_per_day, photo_url } = body
+
+    if (!id || !name || !phone) {
+      return NextResponse.json({ error: 'Worker ID, name, and phone number are required' }, { status: 400 })
+    }
+
+    const wageRate = parseFloat(wage_rate_per_day) || 350.0
+
+    try {
+      const updatedWorker = await prisma.worker.update({
+        where: { id },
+        data: {
+          name,
+          phone,
+          wage_rate_per_day: wageRate,
+          ...(photo_url ? { photo_url } : {}),
+        },
+      })
+
+      const formatted = {
+        ...updatedWorker,
+        face_descriptor: Array.isArray(updatedWorker.face_descriptor)
+          ? (updatedWorker.face_descriptor as number[])
+          : JSON.parse(String(updatedWorker.face_descriptor || '[]')),
+      }
+
+      return NextResponse.json({ success: true, worker: formatted })
+    } catch (dbErr: any) {
+      if (dbErr.code === 'P2002') {
+        return NextResponse.json({ error: 'Another worker with this phone number already exists' }, { status: 409 })
+      }
+
+      const mockWorker = mockStore.workers.find((w) => w.id === id)
+      if (mockWorker) {
+        mockWorker.name = name
+        mockWorker.phone = phone
+        mockWorker.wage_rate_per_day = wageRate
+        if (photo_url) mockWorker.photo_url = photo_url
+        return NextResponse.json({ success: true, worker: mockWorker, fallback: true })
+      }
+      return NextResponse.json({ error: 'Worker not found' }, { status: 404 })
+    }
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message || 'Failed to update worker details' }, { status: 500 })
+  }
+}
+
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
