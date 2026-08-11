@@ -14,6 +14,9 @@ import {
   Lock,
   Eye,
   Landmark,
+  LogIn,
+  LogOut,
+  Clock,
 } from 'lucide-react'
 import { loadFaceModels, extractFaceData, DetectedFaceResult } from '@/lib/faceApi'
 import { findBestMatch, checkLandmarkMovement, EnrolledCandidate, Point2D } from '@/lib/math'
@@ -28,6 +31,9 @@ export default function LiveAttendancePage() {
   const [modelsReady, setModelsReady] = useState(false)
   const [statusMsg, setStatusMsg] = useState('Initializing Face Recognition Engine...')
   const [scanning, setScanning] = useState(false)
+
+  // Scan Mode Selection State: 'CHECK_IN' (In Time) vs 'CHECK_OUT' (Out Time)
+  const [scanMode, setScanMode] = useState<'CHECK_IN' | 'CHECK_OUT'>('CHECK_IN')
 
   // Liveness Frame Memory
   const prevLandmarksRef = useRef<Point2D[] | null>(null)
@@ -153,7 +159,7 @@ export default function LiveAttendancePage() {
     }, 800)
 
     return () => clearInterval(scanInterval)
-  }, [modelsReady, enrolledWorkers, activeSession])
+  }, [modelsReady, enrolledWorkers, activeSession, scanMode])
 
   const drawCanvasOverlay = (result: DetectedFaceResult | null) => {
     if (!canvasRef.current || !videoRef.current) return
@@ -168,15 +174,15 @@ export default function LiveAttendancePage() {
 
     if (result && result.box) {
       const { x, y, width, height } = result.box
-      // Draw Neon Amber bounding box
-      ctx.strokeStyle = '#f59e0b'
+      // Draw Bounding box based on mode
+      ctx.strokeStyle = scanMode === 'CHECK_IN' ? '#10b981' : '#f59e0b'
       ctx.lineWidth = 3
       ctx.strokeRect(x, y, width, height)
 
       // Draw Corner Reticles
       const lineLen = 16
       ctx.lineWidth = 4
-      ctx.strokeStyle = '#fbbf24'
+      ctx.strokeStyle = scanMode === 'CHECK_IN' ? '#34d399' : '#fbbf24'
 
       // Top-Left
       ctx.beginPath()
@@ -205,11 +211,6 @@ export default function LiveAttendancePage() {
       ctx.lineTo(x + width, y + height)
       ctx.lineTo(x + width, y + height - lineLen)
       ctx.stroke()
-
-      // Text label above box
-      ctx.fillStyle = '#f59e0b'
-      ctx.font = 'bold 12px monospace'
-      ctx.fillText(`AI Descriptor Dist: ${(1 - result.score).toFixed(2)}`, x, y > 20 ? y - 8 : y + 18)
     }
   }
 
@@ -217,35 +218,29 @@ export default function LiveAttendancePage() {
   const processFaceMatch = async (faceResult: DetectedFaceResult) => {
     if (!enrolledWorkers || enrolledWorkers.length === 0) {
       setLastMatch({
-        workerName: 'No Enrolled Workers',
+        workerName: 'No Workers Enrolled',
         distance: 1.0,
         status: 'no_match',
-        reason: 'Please enroll site workers first',
+        reason: 'Please enroll workers from the Enroll Worker page first',
       })
       return
     }
 
-    // A. Anti-Spoofing Liveness Check against previous frame landmarks
-    let livenessPassed = true
-    let livenessMsg = ''
-
-    if (prevLandmarksRef.current) {
-      const livenessResult = checkLandmarkMovement(prevLandmarksRef.current, faceResult.landmarks)
-      livenessPassed = livenessResult.isLive
-      livenessMsg = livenessResult.message
-    }
-    // Update reference landmarks for next frame check
+    // A. Liveness Check
+    const livenessResult = checkLandmarkMovement(prevLandmarksRef.current || [], faceResult.landmarks)
+    const livenessPassed = livenessResult.isLive
+    const livenessMsg = livenessResult.message
     prevLandmarksRef.current = faceResult.landmarks
 
-    // B. Match 128-d descriptor against enrolled workers
+    // B. Match face descriptor against site database
     const match = findBestMatch(faceResult.descriptor, enrolledWorkers)
 
     if (!match.worker) {
       setLastMatch({
-        workerName: 'Unrecognized Face',
+        workerName: 'Unknown Face',
         distance: match.distance,
         status: 'no_match',
-        reason: 'Face descriptor vector not found in enrolled database',
+        reason: 'Face does not match any enrolled site worker',
       })
       return
     }
@@ -286,7 +281,7 @@ export default function LiveAttendancePage() {
       }
     }
 
-    // E. POST Attendance to Backend API
+    // E. POST Attendance to Backend API with explicit scan_type
     try {
       const res = await fetch('/api/attendance', {
         method: 'POST',
@@ -298,6 +293,7 @@ export default function LiveAttendancePage() {
           status: finalStatus,
           snapshot_url: snapshotUrl,
           notes: finalNotes,
+          scan_type: scanMode, // Explicitly pass 'CHECK_IN' or 'CHECK_OUT'
         }),
       })
 
@@ -324,8 +320,8 @@ export default function LiveAttendancePage() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header & Attendance Mode Selector */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
             <Link
@@ -344,14 +340,32 @@ export default function LiveAttendancePage() {
           </h1>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className="px-3.5 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1.5 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
-            Liveness Anti-Spoofing Active
-          </span>
-          <span className="px-3.5 py-1 rounded-full text-xs font-mono font-bold bg-white border border-slate-300 text-slate-700 shadow-sm">
-            {enrolledWorkers.length} Workers Cached
-          </span>
+        {/* Prominent IN TIME / OUT TIME Mode Selector */}
+        <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-md">
+          <button
+            type="button"
+            onClick={() => setScanMode('CHECK_IN')}
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
+              scanMode === 'CHECK_IN'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
+            }`}
+          >
+            <LogIn className="w-4 h-4" />
+            IN TIME (Check-In)
+          </button>
+          <button
+            type="button"
+            onClick={() => setScanMode('CHECK_OUT')}
+            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
+              scanMode === 'CHECK_OUT'
+                ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
+                : 'text-slate-600 hover:bg-amber-50 hover:text-amber-700'
+            }`}
+          >
+            <LogOut className="w-4 h-4" />
+            OUT TIME (Check-Out)
+          </button>
         </div>
       </div>
 
@@ -370,12 +384,28 @@ export default function LiveAttendancePage() {
 
             {/* Scanner HUD Overlay Header */}
             <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
-              <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-amber-700 flex items-center gap-2 border border-amber-300">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
-                CAM STREAM • CLIENT ML 30FPS
+              <div className="flex items-center gap-2">
+                <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-amber-700 flex items-center gap-2 border border-amber-300">
+                  <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+                  CAM STREAM
+                </div>
+
+                {/* Mode Indicator Banner */}
+                {scanMode === 'CHECK_IN' ? (
+                  <span className="px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-600 text-white shadow-md flex items-center gap-1.5 border border-emerald-500 animate-in fade-in">
+                    <LogIn className="w-3.5 h-3.5" />
+                    MODE: IN-TIME (CHECK IN)
+                  </span>
+                ) : (
+                  <span className="px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-amber-600 text-white shadow-md flex items-center gap-1.5 border border-amber-500 animate-in fade-in">
+                    <LogOut className="w-3.5 h-3.5" />
+                    MODE: OUT-TIME (CHECK OUT)
+                  </span>
+                )}
               </div>
+
               <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-slate-700 border border-slate-300">
-                {scanning ? 'PROCESSING FRAME...' : 'IDLE'}
+                {scanning ? 'PROCESSING...' : 'IDLE'}
               </div>
             </div>
 
