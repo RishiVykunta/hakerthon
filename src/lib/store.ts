@@ -94,48 +94,7 @@ class InMemoryStore {
     },
   ]
 
-  workers: MockWorker[] = [
-    {
-      id: 'worker_01',
-      name: 'Ramesh Singh',
-      phone: '9876543211',
-      photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300',
-      face_descriptor: generateMockDescriptor(1),
-      wage_rate_per_day: 350.0,
-      site_id: 'site_rampur_01',
-      created_at: new Date(Date.now() - 30 * 86400000).toISOString(),
-    },
-    {
-      id: 'worker_02',
-      name: 'Sunita Devi',
-      phone: '9876543212',
-      photo_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300',
-      face_descriptor: generateMockDescriptor(2),
-      wage_rate_per_day: 350.0,
-      site_id: 'site_rampur_01',
-      created_at: new Date(Date.now() - 25 * 86400000).toISOString(),
-    },
-    {
-      id: 'worker_03',
-      name: 'Manoj Sharma',
-      phone: '9876543213',
-      photo_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300',
-      face_descriptor: generateMockDescriptor(3),
-      wage_rate_per_day: 375.0,
-      site_id: 'site_rampur_01',
-      created_at: new Date(Date.now() - 20 * 86400000).toISOString(),
-    },
-    {
-      id: 'worker_04',
-      name: 'Anita Verma',
-      phone: '9876543214',
-      photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300',
-      face_descriptor: generateMockDescriptor(4),
-      wage_rate_per_day: 350.0,
-      site_id: 'site_rampur_01',
-      created_at: new Date(Date.now() - 15 * 86400000).toISOString(),
-    },
-  ]
+  workers: MockWorker[] = []
 
   sessions: MockSession[] = [
     {
@@ -148,36 +107,7 @@ class InMemoryStore {
     },
   ]
 
-  attendances: MockAttendance[] = [
-    {
-      id: 'att_01',
-      worker_id: 'worker_01',
-      session_id: 'session_demo_01',
-      timestamp: new Date(Date.now() - 28800000).toISOString(),
-      in_time: new Date(Date.now() - 28800000).toISOString(),
-      out_time: new Date().toISOString(),
-      total_hours: 8.0,
-      type: 'CHECK_OUT',
-      confidence_score: 0.28,
-      status: 'auto_confirmed',
-      created_at: new Date(Date.now() - 28800000).toISOString(),
-    },
-    {
-      id: 'att_02',
-      worker_id: 'worker_02',
-      session_id: 'session_demo_01',
-      timestamp: new Date(Date.now() - 14400000).toISOString(),
-      in_time: new Date(Date.now() - 14400000).toISOString(),
-      out_time: null,
-      total_hours: null,
-      type: 'CHECK_IN',
-      confidence_score: 0.54,
-      status: 'manual_review',
-      snapshot_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300',
-      notes: 'Borderline match distance (0.54) - Supervisor review requested',
-      created_at: new Date(Date.now() - 14400000).toISOString(),
-    },
-  ]
+  attendances: MockAttendance[] = []
 
   wageRecords: MockWageRecord[] = []
 }

@@ -50,25 +50,32 @@ export async function GET(req: Request) {
 
       return NextResponse.json({ flaggedWorkers, cutoffPercent, totalSessionsEvaluated: totalSessionsCount })
     } catch (dbErr) {
-      // Mock fallback computation
+      // Dynamic computation based on actual store workers and attendances
       const mockWorkers = mockStore.workers.filter((w) => w.site_id === site_id || !site_id)
-      const flaggedWorkers = mockWorkers.map((w, index) => {
-        const percent = index === 3 ? 40.0 : index === 1 ? 60.0 : 90.0
-        return {
-          id: w.id,
-          name: w.name,
-          phone: w.phone,
-          photo_url: w.photo_url,
-          presentCount: Math.round((percent / 100) * 10),
-          totalSessionsCount: 10,
-          attendancePercentage: percent,
-        }
-      }).filter((w) => w.attendancePercentage < cutoffPercent)
+      const totalSessionsCount = 10
+
+      const flaggedWorkers = mockWorkers
+        .map((w) => {
+          const presentCount = mockStore.attendances.filter(
+            (a) => a.worker_id === w.id && (a.status === 'auto_confirmed' || a.status === 'manual_approved')
+          ).length
+          const attendancePercentage = Number(((presentCount / totalSessionsCount) * 100).toFixed(1))
+          return {
+            id: w.id,
+            name: w.name,
+            phone: w.phone,
+            photo_url: w.photo_url,
+            presentCount,
+            totalSessionsCount,
+            attendancePercentage,
+          }
+        })
+        .filter((w) => w.attendancePercentage < cutoffPercent)
 
       return NextResponse.json({
         flaggedWorkers,
         cutoffPercent,
-        totalSessionsEvaluated: 10,
+        totalSessionsEvaluated: totalSessionsCount,
         fallback: true,
       })
     }
