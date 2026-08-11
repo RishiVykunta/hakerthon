@@ -42,6 +42,10 @@ export interface MockAttendance {
   worker_id: string
   session_id: string
   timestamp: string
+  in_time: string
+  out_time?: string | null
+  total_hours?: number | null
+  type?: 'CHECK_IN' | 'CHECK_OUT'
   confidence_score: number
   status: 'auto_confirmed' | 'manual_review' | 'manual_approved' | 'manual_rejected'
   reviewed_by?: string | null
@@ -55,6 +59,7 @@ export interface MockWageRecord {
   worker_id: string
   session_id: string
   days_present: number
+  total_hours: number
   computed_wage: number
   exported_at: string
 }
@@ -148,21 +153,29 @@ class InMemoryStore {
       id: 'att_01',
       worker_id: 'worker_01',
       session_id: 'session_demo_01',
-      timestamp: new Date(Date.now() - 1800000).toISOString(),
+      timestamp: new Date(Date.now() - 28800000).toISOString(),
+      in_time: new Date(Date.now() - 28800000).toISOString(),
+      out_time: new Date().toISOString(),
+      total_hours: 8.0,
+      type: 'CHECK_OUT',
       confidence_score: 0.28,
       status: 'auto_confirmed',
-      created_at: new Date(Date.now() - 1800000).toISOString(),
+      created_at: new Date(Date.now() - 28800000).toISOString(),
     },
     {
       id: 'att_02',
       worker_id: 'worker_02',
       session_id: 'session_demo_01',
-      timestamp: new Date(Date.now() - 900000).toISOString(),
+      timestamp: new Date(Date.now() - 14400000).toISOString(),
+      in_time: new Date(Date.now() - 14400000).toISOString(),
+      out_time: null,
+      total_hours: null,
+      type: 'CHECK_IN',
       confidence_score: 0.54,
       status: 'manual_review',
       snapshot_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300',
       notes: 'Borderline match distance (0.54) - Supervisor review requested',
-      created_at: new Date(Date.now() - 900000).toISOString(),
+      created_at: new Date(Date.now() - 14400000).toISOString(),
     },
   ]
 

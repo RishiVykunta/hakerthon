@@ -309,7 +309,7 @@ export default function LiveAttendancePage() {
         workerName: match.worker.name,
         distance: match.distance,
         status: !livenessPassed ? 'spoof_rejected' : finalStatus,
-        reason: finalNotes,
+        reason: data.message || finalNotes,
         photoUrl: match.worker.photo_url || undefined,
       })
 
@@ -408,7 +408,7 @@ export default function LiveAttendancePage() {
                   </div>
                   <div className="text-xs text-slate-700 flex items-center gap-3 mt-1 font-mono">
                     <span>Dist Score: {lastMatch.distance.toFixed(3)}</span>
-                    {lastMatch.reason && <span>• {lastMatch.reason}</span>}
+                    {lastMatch.reason && <span className="font-semibold text-amber-900">• {lastMatch.reason}</span>}
                   </div>
                 </div>
               </div>
@@ -421,7 +421,7 @@ export default function LiveAttendancePage() {
           <div className="flex items-center justify-between border-b border-slate-200 pb-3">
             <div>
               <h2 className="font-bold text-slate-900 text-base">Session Attendees</h2>
-              <p className="text-[11px] text-slate-500 font-medium">Live updated every 3 sec</p>
+              <p className="text-[11px] text-slate-500 font-medium">In/Out Times & Total Hours Log</p>
             </div>
             <span className="px-3 py-1 rounded-full text-xs font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
               {attendances.length} Logged
@@ -435,39 +435,48 @@ export default function LiveAttendancePage() {
                 <p className="text-xs font-medium">Waiting for workers to stand in front of webcam scanner...</p>
               </div>
             ) : (
-              attendances.map((att: any) => (
-                <div
-                  key={att.id}
-                  className="p-3 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-3 shadow-sm"
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <img
-                      src={att.worker?.photo_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
-                      alt={att.worker?.name}
-                      className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0"
-                    />
-                    <div className="min-w-0">
-                      <div className="text-xs font-bold text-slate-900 truncate">{att.worker?.name}</div>
-                      <div className="text-[10px] text-slate-500 font-mono">
-                        {new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              attendances.map((att: any) => {
+                const inTimeStr = att.in_time ? new Date(att.in_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                const outTimeStr = att.out_time ? new Date(att.out_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : null
+
+                return (
+                  <div
+                    key={att.id}
+                    className="p-3 rounded-2xl bg-white border border-slate-200 flex items-center justify-between gap-3 shadow-sm"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <img
+                        src={att.worker?.photo_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
+                        alt={att.worker?.name}
+                        className="w-10 h-10 rounded-xl object-cover border border-slate-200 shrink-0"
+                      />
+                      <div className="min-w-0">
+                        <div className="text-xs font-bold text-slate-900 truncate">{att.worker?.name}</div>
+                        <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 mt-0.5">
+                          <span className="text-emerald-700 font-bold">In: {inTimeStr}</span>
+                          {outTimeStr ? (
+                            <span className="text-amber-800 font-bold">• Out: {outTimeStr}</span>
+                          ) : (
+                            <span className="text-slate-400 font-medium">• Working</span>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="text-right shrink-0">
-                    {att.status === 'auto_confirmed' && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
-                        Auto
-                      </span>
-                    )}
-                    {att.status === 'manual_review' && (
-                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-orange-100 text-orange-900 border border-orange-300">
-                        Review
-                      </span>
-                    )}
+                    <div className="text-right shrink-0">
+                      {att.out_time ? (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-100 text-amber-900 border border-amber-300">
+                          {att.total_hours || 8.0} hrs
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-900 border border-emerald-300">
+                          Checked In
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
+                )
+              })
             )}
           </div>
         </div>

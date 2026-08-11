@@ -100,54 +100,61 @@ export default function WorkerDashboardPage() {
               No recent attendance entries recorded.
             </div>
           ) : (
-            attendances.map((att: any) => (
-              <div
-                key={att.id}
-                className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-900">
-                      {new Date(att.timestamp).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
-                    </span>
-                    <span className="text-xs font-mono text-slate-500">
-                      ({new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})
-                    </span>
+            attendances.map((att: any) => {
+              const inStr = att.in_time ? new Date(att.in_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              const outStr = att.out_time ? new Date(att.out_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Working'
+              const hours = att.total_hours || (att.out_time ? 8.0 : null)
+              const dailyRate = worker?.wage_rate_per_day || 350
+              const computedWage = hours ? Math.round((hours / 8.0) * dailyRate) : Math.round(dailyRate)
+
+              return (
+                <div
+                  key={att.id}
+                  className="p-4 rounded-2xl bg-white border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm"
+                >
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-bold text-slate-900">
+                        {new Date(att.timestamp).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-600 font-mono flex items-center gap-2">
+                      <span className="text-emerald-700 font-bold">In: {inStr}</span>
+                      <span className="text-amber-800 font-bold">• Out: {outStr}</span>
+                      {hours && <span className="text-slate-900 font-extrabold">• ({hours} hrs worked)</span>}
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-600 font-medium">
-                    {att.notes || 'Webcam AI face recognition verification'}
+
+                  <div className="flex items-center gap-3">
+                    <div className="text-right">
+                      <div className="text-xs font-extrabold text-slate-900">₹{computedWage}</div>
+                      <div className="text-[10px] text-slate-500 font-mono">{hours ? `${hours} hrs` : 'In Progress'}</div>
+                    </div>
+
+                    {att.status === 'auto_confirmed' && (
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" /> Auto Confirmed
+                      </span>
+                    )}
+                    {att.status === 'manual_approved' && (
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
+                        <ShieldCheck className="w-3.5 h-3.5 text-amber-600" /> Approved
+                      </span>
+                    )}
+                    {att.status === 'manual_review' && (
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-900 border border-orange-300 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 text-orange-600" /> Under Review
+                      </span>
+                    )}
+                    {att.status === 'manual_rejected' && (
+                      <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300 flex items-center gap-1">
+                        <AlertCircle className="w-3.5 h-3.5 text-rose-600" /> Disputed / Rejected
+                      </span>
+                    )}
                   </div>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <div className="text-xs font-extrabold text-slate-900">₹{worker?.wage_rate_per_day || 350}</div>
-                    <div className="text-[10px] text-slate-500 font-mono">1.0 Day</div>
-                  </div>
-
-                  {att.status === 'auto_confirmed' && (
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" /> Auto Confirmed
-                    </span>
-                  )}
-                  {att.status === 'manual_approved' && (
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300 flex items-center gap-1">
-                      <ShieldCheck className="w-3.5 h-3.5 text-amber-600" /> Approved
-                    </span>
-                  )}
-                  {att.status === 'manual_review' && (
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-900 border border-orange-300 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 text-orange-600" /> Under Review
-                    </span>
-                  )}
-                  {att.status === 'manual_rejected' && (
-                    <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300 flex items-center gap-1">
-                      <AlertCircle className="w-3.5 h-3.5 text-rose-600" /> Disputed / Rejected
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))
+              )
+            })
           )}
         </div>
       </div>

@@ -51,16 +51,20 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
         },
       })
 
-      // Generate Wage Records for present workers
+      // Generate Wage Records for present workers based on hours worked
       for (const att of updatedSession.attendances) {
+        const hours = att.total_hours || 8.0
+        const computedWage = Math.round((hours / 8.0) * att.worker.wage_rate_per_day)
+
         await prisma.wageRecord.upsert({
           where: { session_id_worker_id: { session_id: id, worker_id: att.worker_id } },
-          update: { computed_wage: att.worker.wage_rate_per_day },
+          update: { total_hours: hours, computed_wage: computedWage },
           create: {
             session_id: id,
             worker_id: att.worker_id,
             days_present: 1.0,
-            computed_wage: att.worker.wage_rate_per_day,
+            total_hours: hours,
+            computed_wage: computedWage,
           },
         })
       }
@@ -70,13 +74,16 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       const mockS = mockStore.sessions.find((s) => s.id === id)
       if (mockS) {
         mockS.status = 'closed'
-        // Compute mock wage records
+        // Compute mock wage records based on total_hours
         const confirmedAtts = mockStore.attendances.filter(
           (a) => a.session_id === id && (a.status === 'auto_confirmed' || a.status === 'manual_approved')
         )
         for (const att of confirmedAtts) {
           const w = mockStore.workers.find((wk) => wk.id === att.worker_id)
-          const wage = w ? w.wage_rate_per_day : 350.0
+          const dailyRate = w ? w.wage_rate_per_day : 350.0
+          const hours = att.total_hours || 8.0
+          const computedWage = Math.round((hours / 8.0) * dailyRate)
+
           const existingWr = mockStore.wageRecords.find((wr) => wr.session_id === id && wr.worker_id === att.worker_id)
           if (!existingWr) {
             const newWr: MockWageRecord = {
@@ -84,10 +91,14 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
               worker_id: att.worker_id,
               session_id: id,
               days_present: 1.0,
-              computed_wage: wage,
+              total_hours: hours,
+              computed_wage: computedWage,
               exported_at: new Date().toISOString(),
             }
             mockStore.wageRecords.push(newWr)
+          } else {
+            existingWr.total_hours = hours
+            existingWr.computed_wage = computedWage
           }
         }
       }

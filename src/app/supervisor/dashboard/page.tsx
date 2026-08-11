@@ -562,8 +562,8 @@ export default function SupervisorDashboard() {
       <div className="glass-panel p-6 rounded-3xl border border-slate-200 space-y-4 shadow-xl">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-bold text-slate-900">Today's Live Attendance Log</h2>
-            <p className="text-xs text-slate-600 font-medium">Updates live via background polling during active site sessions</p>
+            <h2 className="text-lg font-bold text-slate-900">Today's Live Attendance & Hourly Wage Log</h2>
+            <p className="text-xs text-slate-600 font-medium">Tracks worker check-in time, check-out time, total hours, and computed wages</p>
           </div>
           <span className="text-xs font-mono text-amber-800 bg-amber-100 px-3 py-1 rounded-full border border-amber-300 font-semibold">
             {attendances.length} Records Logged
@@ -576,66 +576,84 @@ export default function SupervisorDashboard() {
               <tr>
                 <th className="py-3 px-4">Worker</th>
                 <th className="py-3 px-4">Phone</th>
-                <th className="py-3 px-4">Timestamp</th>
-                <th className="py-3 px-4">Distance Score</th>
+                <th className="py-3 px-4">In Time</th>
+                <th className="py-3 px-4">Out Time</th>
+                <th className="py-3 px-4">Total Hours</th>
                 <th className="py-3 px-4">Status</th>
-                <th className="py-3 px-4">Daily Wage</th>
+                <th className="py-3 px-4">Computed Wage</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200 text-slate-700">
               {attendances.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-10 text-center text-slate-500 text-xs font-medium">
+                  <td colSpan={7} className="py-10 text-center text-slate-500 text-xs font-medium">
                     No attendance records logged yet for today's session. Start the Live Scanner Kiosk to begin!
                   </td>
                 </tr>
               ) : (
-                attendances.map((att: any) => (
-                  <tr key={att.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3.5 px-4 flex items-center gap-3">
-                      <img
-                        src={att.worker?.photo_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
-                        alt={att.worker?.name}
-                        className="w-9 h-9 rounded-xl object-cover border border-slate-200 shadow-sm"
-                      />
-                      <span className="font-semibold text-slate-900">{att.worker?.name}</span>
-                    </td>
-                    <td className="py-3.5 px-4 font-mono text-xs text-slate-600">{att.worker?.phone}</td>
-                    <td className="py-3.5 px-4 text-xs text-slate-600">
-                      {new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                    </td>
-                    <td className="py-3.5 px-4 font-mono text-xs">
-                      <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-amber-800 border border-slate-200 font-bold">
-                        {att.confidence_score?.toFixed(3)}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4">
-                      {att.status === 'auto_confirmed' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                          Auto-Confirmed
-                        </span>
-                      )}
-                      {att.status === 'manual_review' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-900 border border-orange-300">
-                          Needs Review
-                        </span>
-                      )}
-                      {att.status === 'manual_approved' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                          Approved
-                        </span>
-                      )}
-                      {att.status === 'manual_rejected' && (
-                        <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300">
-                          Rejected
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-4 font-extrabold text-slate-900">
-                      ₹{att.worker?.wage_rate_per_day || 350}
-                    </td>
-                  </tr>
-                ))
+                attendances.map((att: any) => {
+                  const inTimeStr = att.in_time ? new Date(att.in_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date(att.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                  const outTimeStr = att.out_time ? new Date(att.out_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'
+                  const hours = att.total_hours || (att.out_time ? 8.0 : null)
+                  const dailyRate = att.worker?.wage_rate_per_day || 350
+                  const computedWage = hours ? Math.round((hours / 8.0) * dailyRate) : Math.round(dailyRate)
+
+                  return (
+                    <tr key={att.id} className="hover:bg-slate-50/80 transition-colors">
+                      <td className="py-3.5 px-4 flex items-center gap-3">
+                        <img
+                          src={att.worker?.photo_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
+                          alt={att.worker?.name}
+                          className="w-9 h-9 rounded-xl object-cover border border-slate-200 shadow-sm"
+                        />
+                        <span className="font-semibold text-slate-900">{att.worker?.name}</span>
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-xs text-slate-600">{att.worker?.phone}</td>
+                      <td className="py-3.5 px-4 text-xs font-mono font-bold text-emerald-700">
+                        {inTimeStr}
+                      </td>
+                      <td className="py-3.5 px-4 text-xs font-mono font-bold text-amber-800">
+                        {outTimeStr}
+                      </td>
+                      <td className="py-3.5 px-4 font-mono text-xs">
+                        {hours ? (
+                          <span className="px-2.5 py-1 rounded-lg bg-amber-100 text-amber-900 border border-amber-300 font-extrabold">
+                            {hours} hrs
+                          </span>
+                        ) : (
+                          <span className="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200 font-semibold text-[11px]">
+                            In Progress
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4">
+                        {att.status === 'auto_confirmed' && (
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                            Auto-Confirmed
+                          </span>
+                        )}
+                        {att.status === 'manual_review' && (
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-900 border border-orange-300">
+                            Needs Review
+                          </span>
+                        )}
+                        {att.status === 'manual_approved' && (
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                            Approved
+                          </span>
+                        )}
+                        {att.status === 'manual_rejected' && (
+                          <span className="px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-900 border border-rose-300">
+                            Rejected
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 font-extrabold text-slate-900">
+                        ₹{computedWage}
+                      </td>
+                    </tr>
+                  )
+                })
               )}
             </tbody>
           </table>

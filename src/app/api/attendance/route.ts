@@ -14,69 +14,109 @@ export async function POST(req: Request) {
 
     const attStatus = status || 'auto_confirmed'
     const score = typeof confidence_score === 'number' ? confidence_score : 0.35
+    const now = new Date()
 
-    // 1. Check for Duplicate Entry in this session
+    // 1. Try Prisma DB Execution
     try {
       const existing = await prisma.attendance.findUnique({
         where: { session_id_worker_id: { session_id, worker_id } },
-        include: { worker: { select: { name: true } } },
+        include: { worker: true },
       })
 
       if (existing) {
-        return NextResponse.json(
-          {
-            duplicate: true,
-            message: `Attendance already recorded for ${existing.worker?.name || 'this worker'} in session`,
-            attendance: existing,
+        // Worker scanning 2nd time -> CHECK OUT!
+        const inDate = new Date(existing.in_time || existing.timestamp)
+        const rawHours = (now.getTime() - inDate.getTime()) / (1000 * 60 * 60)
+        const total_hours = rawHours > 0.05 ? Number(rawHours.toFixed(2)) : 8.0
+
+        const updated = await prisma.attendance.update({
+          where: { id: existing.id },
+          data: {
+            out_time: now,
+            total_hours,
+            notes: notes ? `${notes} (Checked Out)` : `Checked Out at ${now.toLocaleTimeString()}`,
           },
-          { status: 200 }
-        )
+          include: { worker: true },
+        })
+
+        return NextResponse.json({
+          success: true,
+          action: 'check_out',
+          message: `Checked OUT successfully! Worked ${total_hours} hrs today.`,
+          attendance: updated,
+        })
       }
 
-      // Create new attendance record
+      // Worker scanning 1st time -> CHECK IN!
       const attendance = await prisma.attendance.create({
         data: {
           session_id,
           worker_id,
+          in_time: now,
           confidence_score: score,
           status: attStatus,
           snapshot_url: snapshot_url || null,
-          notes: notes || null,
+          notes: notes || 'Checked In',
         },
         include: { worker: true },
       })
 
-      return NextResponse.json({ success: true, attendance })
+      return NextResponse.json({
+        success: true,
+        action: 'check_in',
+        message: `Checked IN successfully at ${now.toLocaleTimeString()}`,
+        attendance,
+      })
     } catch (dbErr) {
       // Fallback to mockStore
       const mockDup = mockStore.attendances.find((a) => a.session_id === session_id && a.worker_id === worker_id)
+      const worker = mockStore.workers.find((w) => w.id === worker_id)
+
       if (mockDup) {
-        const worker = mockStore.workers.find((w) => w.id === worker_id)
-        return NextResponse.json(
-          {
-            duplicate: true,
-            message: `Attendance already recorded for ${worker?.name || 'this worker'} in session`,
-            attendance: { ...mockDup, worker },
-          },
-          { status: 200 }
-        )
+        // Mock Check Out
+        const inDate = new Date(mockDup.in_time || mockDup.timestamp)
+        const rawHours = (now.getTime() - inDate.getTime()) / (1000 * 60 * 60)
+        const total_hours = rawHours > 0.05 ? Number(rawHours.toFixed(2)) : 8.0
+
+        mockDup.out_time = now.toISOString()
+        mockDup.total_hours = total_hours
+        mockDup.type = 'CHECK_OUT'
+        mockDup.notes = `Checked Out at ${now.toLocaleTimeString()}`
+
+        return NextResponse.json({
+          success: true,
+          action: 'check_out',
+          message: `Checked OUT successfully! Worked ${total_hours} hrs today.`,
+          attendance: { ...mockDup, worker },
+          fallback: true,
+        })
       }
 
+      // Mock Check In
       const newMockAtt: MockAttendance = {
         id: `att_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
         worker_id,
         session_id,
-        timestamp: new Date().toISOString(),
+        timestamp: now.toISOString(),
+        in_time: now.toISOString(),
+        out_time: null,
+        total_hours: null,
+        type: 'CHECK_IN',
         confidence_score: score,
         status: attStatus,
         snapshot_url: snapshot_url || null,
-        notes: notes || null,
-        created_at: new Date().toISOString(),
+        notes: 'Checked In',
+        created_at: now.toISOString(),
       }
       mockStore.attendances.unshift(newMockAtt)
-      const worker = mockStore.workers.find((w) => w.id === worker_id)
 
-      return NextResponse.json({ success: true, attendance: { ...newMockAtt, worker }, fallback: true })
+      return NextResponse.json({
+        success: true,
+        action: 'check_in',
+        message: `Checked IN successfully at ${now.toLocaleTimeString()}`,
+        attendance: { ...newMockAtt, worker },
+        fallback: true,
+      })
     }
   } catch (err: any) {
     return NextResponse.json({ error: err.message || 'Failed to record attendance' }, { status: 500 })

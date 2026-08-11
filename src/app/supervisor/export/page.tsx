@@ -62,19 +62,29 @@ export default function ReportsPage() {
   const handleDownloadCSV = () => {
     if (validRecords.length === 0) return
 
-    const headers = ['Worker ID', 'Worker Name', 'Phone Number', 'Site ID', 'Session Date', 'Status', 'Days Present', 'Daily Rate (INR)', 'Computed Wage (INR)']
+    const headers = ['Worker ID', 'Worker Name', 'Phone Number', 'Site ID', 'Session Date', 'In Time', 'Out Time', 'Hours Worked', 'Status', 'Daily Rate (INR)', 'Computed Wage (INR)']
     
-    const rows = validRecords.map((r) => [
-      r.worker_id,
-      `"${r.worker?.name || 'N/A'}"`,
-      r.worker?.phone || 'N/A',
-      'site_rampur_01',
-      new Date(r.timestamp).toISOString().split('T')[0],
-      r.status,
-      '1.0',
-      r.worker?.wage_rate_per_day || 350,
-      r.worker?.wage_rate_per_day || 350,
-    ])
+    const rows = validRecords.map((r) => {
+      const inStr = r.in_time ? new Date(r.in_time).toLocaleTimeString() : new Date(r.timestamp).toLocaleTimeString()
+      const outStr = r.out_time ? new Date(r.out_time).toLocaleTimeString() : 'N/A'
+      const hours = r.total_hours || 8.0
+      const dailyRate = r.worker?.wage_rate_per_day || 350
+      const wage = Math.round((hours / 8.0) * dailyRate)
+
+      return [
+        r.worker_id,
+        `"${r.worker?.name || 'N/A'}"`,
+        r.worker?.phone || 'N/A',
+        'site_rampur_01',
+        new Date(r.timestamp).toISOString().split('T')[0],
+        inStr,
+        outStr,
+        hours,
+        r.status,
+        dailyRate,
+        wage,
+      ]
+    })
 
     const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n')
 
@@ -201,8 +211,9 @@ export default function ReportsPage() {
                 <tr>
                   <th className="py-3 px-4">Worker Name</th>
                   <th className="py-3 px-4">Phone Number</th>
-                  <th className="py-3 px-4">Status</th>
-                  <th className="py-3 px-4">Days Present</th>
+                  <th className="py-3 px-4">In Time</th>
+                  <th className="py-3 px-4">Out Time</th>
+                  <th className="py-3 px-4">Hours Worked</th>
                   <th className="py-3 px-4">Daily Rate</th>
                   <th className="py-3 px-4">Computed Payout</th>
                 </tr>
@@ -210,25 +221,30 @@ export default function ReportsPage() {
               <tbody className="divide-y divide-slate-200 text-slate-700">
                 {validRecords.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-500 text-xs font-medium">
+                    <td colSpan={7} className="py-8 text-center text-slate-500 text-xs font-medium">
                       No confirmed attendance records found for this session.
                     </td>
                   </tr>
                 ) : (
-                  validRecords.map((r) => (
-                    <tr key={r.id} className="hover:bg-slate-50 transition-colors">
-                      <td className="py-3.5 px-4 font-semibold text-slate-900">{r.worker?.name}</td>
-                      <td className="py-3.5 px-4 font-mono text-xs text-slate-600">{r.worker?.phone}</td>
-                      <td className="py-3.5 px-4">
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-900 border border-emerald-300">
-                          {r.status}
-                        </span>
-                      </td>
-                      <td className="py-3.5 px-4 font-mono text-xs text-slate-600">1.0 Day</td>
-                      <td className="py-3.5 px-4 font-mono text-xs text-slate-600">₹{r.worker?.wage_rate_per_day || 350}</td>
-                      <td className="py-3.5 px-4 font-extrabold text-slate-900">₹{r.worker?.wage_rate_per_day || 350}</td>
-                    </tr>
-                  ))
+                  validRecords.map((r) => {
+                    const inStr = r.in_time ? new Date(r.in_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    const outStr = r.out_time ? new Date(r.out_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'
+                    const hours = r.total_hours || (r.out_time ? 8.0 : 8.0)
+                    const dailyRate = r.worker?.wage_rate_per_day || 350
+                    const computedWage = Math.round((hours / 8.0) * dailyRate)
+
+                    return (
+                      <tr key={r.id} className="hover:bg-slate-50 transition-colors">
+                        <td className="py-3.5 px-4 font-semibold text-slate-900">{r.worker?.name}</td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-slate-600">{r.worker?.phone}</td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-emerald-700 font-bold">{inStr}</td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-amber-800 font-bold">{outStr}</td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-slate-900 font-bold">{hours} hrs</td>
+                        <td className="py-3.5 px-4 font-mono text-xs text-slate-600">₹{dailyRate}</td>
+                        <td className="py-3.5 px-4 font-extrabold text-slate-900">₹{computedWage}</td>
+                      </tr>
+                    )
+                  })
                 )}
               </tbody>
             </table>
