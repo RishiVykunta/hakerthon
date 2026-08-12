@@ -84,10 +84,6 @@ export default function Navbar() {
               <span className="font-extrabold text-base sm:text-lg tracking-tight text-slate-900 group-hover:text-amber-600 transition-colors">
                 GreenGrid
               </span>
-              <span className="text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-bold border border-slate-200 flex items-center gap-1">
-                <Landmark className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-600" />
-                MGNREGA
-              </span>
             </div>
             <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium leading-none mt-0.5 hidden xs:block">
               AI-Powered Worksite Management
