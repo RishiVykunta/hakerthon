@@ -94,7 +94,48 @@ class InMemoryStore {
     },
   ]
 
-  workers: MockWorker[] = []
+  workers: MockWorker[] = [
+    {
+      id: 'worker_01',
+      name: 'Ramesh Singh',
+      phone: '9876543211',
+      photo_url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
+      face_descriptor: generateMockDescriptor(1),
+      wage_rate_per_day: 350,
+      site_id: 'site_rampur_01',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 'worker_02',
+      name: 'Anita Devi',
+      phone: '9876543212',
+      photo_url: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150',
+      face_descriptor: generateMockDescriptor(2),
+      wage_rate_per_day: 350,
+      site_id: 'site_rampur_01',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 'worker_03',
+      name: 'Suresh Kumar',
+      phone: '9876543213',
+      photo_url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      face_descriptor: generateMockDescriptor(3),
+      wage_rate_per_day: 350,
+      site_id: 'site_rampur_01',
+      created_at: new Date().toISOString(),
+    },
+    {
+      id: 'worker_04',
+      name: 'Sunita Verma',
+      phone: '9876543214',
+      photo_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+      face_descriptor: generateMockDescriptor(4),
+      wage_rate_per_day: 350,
+      site_id: 'site_rampur_01',
+      created_at: new Date().toISOString(),
+    },
+  ]
 
   sessions: MockSession[] = [
     {
@@ -107,7 +148,22 @@ class InMemoryStore {
     },
   ]
 
-  attendances: MockAttendance[] = []
+  attendances: MockAttendance[] = [
+    {
+      id: 'att_demo_01',
+      worker_id: 'worker_01',
+      session_id: 'session_demo_01',
+      timestamp: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
+      in_time: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
+      out_time: null,
+      total_hours: null,
+      type: 'CHECK_IN',
+      confidence_score: 0.22,
+      status: 'auto_confirmed',
+      notes: 'Checked In at 08:30 AM',
+      created_at: new Date(Date.now() - 4 * 3600 * 1000).toISOString(),
+    },
+  ]
 
   wageRecords: MockWageRecord[] = []
 }
@@ -116,3 +172,4 @@ class InMemoryStore {
 const globalStore = globalThis as unknown as { mockStore?: InMemoryStore }
 export const mockStore = globalStore.mockStore ?? new InMemoryStore()
 if (process.env.NODE_ENV !== 'production') globalStore.mockStore = mockStore
+

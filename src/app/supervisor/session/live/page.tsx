@@ -17,6 +17,12 @@ import {
   LogIn,
   LogOut,
   Clock,
+  Search,
+  Check,
+  X,
+  Sparkles,
+  ToggleLeft,
+  ToggleRight,
 } from 'lucide-react'
 import { loadFaceModels, extractFaceData, DetectedFaceResult } from '@/lib/faceApi'
 import { findBestMatch, checkLandmarkMovement, EnrolledCandidate, Point2D } from '@/lib/math'
@@ -35,18 +41,28 @@ export default function LiveAttendancePage() {
   // Scan Mode Selection State: 'CHECK_IN' (In Time) vs 'CHECK_OUT' (Out Time)
   const [scanMode, setScanMode] = useState<'CHECK_IN' | 'CHECK_OUT'>('CHECK_IN')
 
+  // Auto-Mark vs Require Manual "Mark Attendance" Click Toggle
+  // Default to false so attendance is ONLY marked when clicking "Mark Attendance" button
+  const [autoMarkMode, setAutoMarkMode] = useState(false)
+
+  // Detected Scanned Candidate (Waiting for Supervisor "Mark Attendance" Click)
+  const [scannedCandidate, setScannedCandidate] = useState<{
+    worker: any
+    distance: number
+    livenessPassed: boolean
+    livenessMsg: string
+    snapshotUrl: string | null
+    finalStatus: 'auto_confirmed' | 'manual_review'
+    finalNotes: string
+  } | null>(null)
+
+  const [submitting, setSubmitting] = useState(false)
+  const [successAlert, setSuccessAlert] = useState<string | null>(null)
+  const [manualSearch, setManualSearch] = useState('')
+
   // Liveness Frame Memory
   const prevLandmarksRef = useRef<Point2D[] | null>(null)
   const lastMatchTimeRef = useRef<{ [workerId: string]: number }>({})
-
-  // UI Feedback Cards
-  const [lastMatch, setLastMatch] = useState<{
-    workerName: string
-    distance: number
-    status: 'auto_confirmed' | 'manual_review' | 'no_match' | 'spoof_rejected'
-    reason?: string
-    photoUrl?: string
-  } | null>(null)
 
   const [attendances, setAttendances] = useState<any[]>([])
 
@@ -132,10 +148,10 @@ export default function LiveAttendancePage() {
   useEffect(() => {
     if (!modelsReady || !videoRef.current) return
 
-    let isSubmitting = false
+    let isScanningCycle = false
 
     const scanInterval = setInterval(async () => {
-      if (isSubmitting || !videoRef.current || videoRef.current.paused || videoRef.current.ended) return
+      if (isScanningCycle || !videoRef.current || videoRef.current.paused || videoRef.current.ended) return
 
       try {
         setScanning(true)
@@ -145,11 +161,11 @@ export default function LiveAttendancePage() {
         drawCanvasOverlay(faceResult)
 
         if (faceResult) {
-          isSubmitting = true
+          isScanningCycle = true
           await processFaceMatch(faceResult)
           setTimeout(() => {
-            isSubmitting = false
-          }, 2000) // 2 second cooldown per recognition cycle
+            isScanningCycle = false
+          }, 1500)
         }
       } catch (err) {
         console.error('Scan error:', err)
@@ -159,7 +175,7 @@ export default function LiveAttendancePage() {
     }, 800)
 
     return () => clearInterval(scanInterval)
-  }, [modelsReady, enrolledWorkers, activeSession, scanMode])
+  }, [modelsReady, enrolledWorkers, activeSession, scanMode, autoMarkMode])
 
   const drawCanvasOverlay = (result: DetectedFaceResult | null) => {
     if (!canvasRef.current || !videoRef.current) return
@@ -214,17 +230,9 @@ export default function LiveAttendancePage() {
     }
   }
 
-  // 4. Process Match & Anti-Spoofing Liveness Check
+  // 4. Process Match & Candidate Selection
   const processFaceMatch = async (faceResult: DetectedFaceResult) => {
-    if (!enrolledWorkers || enrolledWorkers.length === 0) {
-      setLastMatch({
-        workerName: 'No Workers Enrolled',
-        distance: 1.0,
-        status: 'no_match',
-        reason: 'Please enroll workers from the Enroll Worker page first',
-      })
-      return
-    }
+    if (!enrolledWorkers || enrolledWorkers.length === 0) return
 
     // A. Liveness Check
     const livenessResult = checkLandmarkMovement(prevLandmarksRef.current || [], faceResult.landmarks)
@@ -235,31 +243,15 @@ export default function LiveAttendancePage() {
     // B. Match face descriptor against site database
     const match = findBestMatch(faceResult.descriptor, enrolledWorkers)
 
-    if (!match.worker) {
-      setLastMatch({
-        workerName: 'Unknown Face',
-        distance: match.distance,
-        status: 'no_match',
-        reason: 'Face does not match any enrolled site worker',
-      })
-      return
-    }
+    if (!match.worker) return
 
-    // Cooldown check to prevent rapid multi-logging
+    // Cooldown check (don't override candidate if already logged in last 10s)
     const now = Date.now()
     const lastLogged = lastMatchTimeRef.current[match.worker.id] || 0
-    if (now - lastLogged < 10000) {
-      setLastMatch({
-        workerName: match.worker.name,
-        distance: match.distance,
-        status: 'auto_confirmed',
-        reason: 'Already logged (10s Cooldown active)',
-        photoUrl: match.worker.photo_url || undefined,
-      })
+    if (now - lastLogged < 10000 && !scannedCandidate) {
       return
     }
 
-    // C. Force into manual_review if liveness check failed
     let finalStatus: 'auto_confirmed' | 'manual_review' = match.status === 'auto_confirmed' ? 'auto_confirmed' : 'manual_review'
     let finalNotes = match.reason || ''
 
@@ -268,7 +260,7 @@ export default function LiveAttendancePage() {
       finalNotes = `Liveness Check Failed: Static photo suspected (${livenessMsg})`
     }
 
-    // D. Capture snapshot canvas frame for submission
+    // Capture snapshot canvas frame
     let snapshotUrl: string | null = null
     if (canvasRef.current && videoRef.current) {
       const tempCanvas = document.createElement('canvas')
@@ -281,45 +273,96 @@ export default function LiveAttendancePage() {
       }
     }
 
-    // E. POST Attendance to Backend API with explicit scan_type
+    const candidateObj = {
+      worker: match.worker,
+      distance: match.distance,
+      livenessPassed,
+      livenessMsg,
+      snapshotUrl,
+      finalStatus,
+      finalNotes,
+    }
+
+    setScannedCandidate(candidateObj)
+
+    // If Auto-Mark mode is explicitly turned ON by supervisor, auto-submit
+    if (autoMarkMode) {
+      await handleExecuteMarkAttendance(candidateObj)
+    }
+  }
+
+  // 5. Core Action Handler: MARK ATTENDANCE (Triggered when user clicks "Mark Attendance" button)
+  const handleExecuteMarkAttendance = async (candidateToMark?: any, directWorkerId?: string) => {
+    const targetCandidate = candidateToMark || scannedCandidate
+    const workerId = directWorkerId || targetCandidate?.worker?.id
+
+    if (!workerId) return
+
+    setSubmitting(true)
+
     try {
       const res = await fetch('/api/attendance', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: activeSession?.id || 'session_demo_01',
-          worker_id: match.worker.id,
-          confidence_score: match.distance,
-          status: finalStatus,
-          snapshot_url: snapshotUrl,
-          notes: finalNotes,
+          worker_id: workerId,
+          confidence_score: targetCandidate?.distance || 0.18,
+          status: targetCandidate?.finalStatus || 'auto_confirmed',
+          snapshot_url: targetCandidate?.snapshotUrl || null,
+          notes: targetCandidate?.finalNotes || `Marked via Supervisor Option (${scanMode})`,
           scan_type: scanMode, // Explicitly pass 'CHECK_IN' or 'CHECK_OUT'
         }),
       })
 
       const data = await res.json()
 
-      lastMatchTimeRef.current[match.worker.id] = now
+      lastMatchTimeRef.current[workerId] = Date.now()
 
-      setLastMatch({
-        workerName: match.worker.name,
-        distance: match.distance,
-        status: !livenessPassed ? 'spoof_rejected' : finalStatus,
-        reason: data.message || finalNotes,
-        photoUrl: match.worker.photo_url || undefined,
-      })
+      const workerName = targetCandidate?.worker?.name || enrolledWorkers.find((w) => w.id === workerId)?.name || 'Worker'
+      const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 
-      // Refresh live attendance list
+      setSuccessAlert(
+        `🎉 Attendance Marked Successfully! Worker: ${workerName} • Mode: ${scanMode === 'CHECK_IN' ? 'CHECK-IN (In Time)' : 'CHECK-OUT (Out Time)'} • Logged at ${timeStr}`
+      )
+
+      // Refresh live attendance list immediately
       if (activeSession?.id) {
-        fetchSessionAttendance(activeSession.id)
+        await fetchSessionAttendance(activeSession.id)
       }
+
+      setScannedCandidate(null)
+
+      setTimeout(() => {
+        setSuccessAlert(null)
+      }, 5000)
     } catch (err) {
-      console.error('Error logging attendance match:', err)
+      console.error('Error executing Mark Attendance:', err)
+    } finally {
+      setSubmitting(false)
     }
   }
 
+  const filteredEnrolledWorkers = enrolledWorkers.filter((w) => {
+    const q = manualSearch.toLowerCase()
+    return w.name.toLowerCase().includes(q) || w.phone.includes(q)
+  })
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto">
+      {/* Top Banner Success Toast */}
+      {successAlert && (
+        <div className="p-4 rounded-2xl bg-emerald-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-between shadow-xl animate-in slide-in-from-top border border-emerald-400">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 shrink-0 text-emerald-100" />
+            <span>{successAlert}</span>
+          </div>
+          <button onClick={() => setSuccessAlert(null)} className="p-1 hover:bg-emerald-600 rounded-lg">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Header & Attendance Mode Selector */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -340,32 +383,58 @@ export default function LiveAttendancePage() {
           </h1>
         </div>
 
-        {/* Prominent IN TIME / OUT TIME Mode Selector */}
-        <div className="flex items-center gap-2 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-md">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Require Manual Click vs Auto Mark Mode Toggle */}
           <button
             type="button"
-            onClick={() => setScanMode('CHECK_IN')}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
-              scanMode === 'CHECK_IN'
-                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
+            onClick={() => setAutoMarkMode(!autoMarkMode)}
+            className={`px-3.5 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 border ${
+              autoMarkMode
+                ? 'bg-amber-100 text-amber-900 border-amber-300'
+                : 'bg-slate-900 text-white border-slate-800 shadow-md'
             }`}
+            title="Toggle whether attendance requires clicking 'Mark Attendance' button"
           >
-            <LogIn className="w-4 h-4" />
-            IN TIME (Check-In)
+            {autoMarkMode ? (
+              <>
+                <ToggleRight className="w-4 h-4 text-amber-600" />
+                Mode: Auto-Mark ON
+              </>
+            ) : (
+              <>
+                <ToggleLeft className="w-4 h-4 text-emerald-400" />
+                Mode: Click "Mark Attendance"
+              </>
+            )}
           </button>
-          <button
-            type="button"
-            onClick={() => setScanMode('CHECK_OUT')}
-            className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
-              scanMode === 'CHECK_OUT'
-                ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                : 'text-slate-600 hover:bg-amber-50 hover:text-amber-700'
-            }`}
-          >
-            <LogOut className="w-4 h-4" />
-            OUT TIME (Check-Out)
-          </button>
+
+          {/* Prominent IN TIME / OUT TIME Mode Selector */}
+          <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-md">
+            <button
+              type="button"
+              onClick={() => setScanMode('CHECK_IN')}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
+                scanMode === 'CHECK_IN'
+                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
+                  : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
+              }`}
+            >
+              <LogIn className="w-4 h-4" />
+              IN TIME (Check-In)
+            </button>
+            <button
+              type="button"
+              onClick={() => setScanMode('CHECK_OUT')}
+              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
+                scanMode === 'CHECK_OUT'
+                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
+                  : 'text-slate-600 hover:bg-amber-50 hover:text-amber-700'
+              }`}
+            >
+              <LogOut className="w-4 h-4" />
+              OUT TIME (Check-Out)
+            </button>
+          </div>
         </div>
       </div>
 
@@ -405,41 +474,76 @@ export default function LiveAttendancePage() {
               </div>
 
               <div className="px-3.5 py-1.5 rounded-xl glass-card text-xs font-mono font-bold text-slate-700 border border-slate-300">
-                {scanning ? 'PROCESSING...' : 'IDLE'}
+                {scanning ? 'SCANNING...' : 'READY'}
               </div>
             </div>
 
-            {/* Match Status Card Floating Overlay */}
-            {lastMatch && (
-              <div className="absolute bottom-4 left-4 right-4 p-4 rounded-2xl glass-panel border border-slate-200 shadow-2xl flex items-center gap-4 transition-all animate-in fade-in slide-in-from-bottom-2">
-                <img
-                  src={lastMatch.photoUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
-                  alt={lastMatch.workerName}
-                  className="w-14 h-14 rounded-2xl object-cover border-2 border-amber-400 shrink-0 shadow-md"
-                />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-extrabold text-slate-900 text-base truncate">{lastMatch.workerName}</span>
-                    {lastMatch.status === 'auto_confirmed' && (
-                      <span className="px-2.5 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-extrabold flex items-center gap-1 border border-amber-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" /> MATCH CONFIRMED
-                      </span>
-                    )}
-                    {lastMatch.status === 'manual_review' && (
-                      <span className="px-2.5 py-0.5 rounded-md bg-orange-100 text-orange-900 text-[10px] font-extrabold flex items-center gap-1 border border-orange-300">
-                        <AlertTriangle className="w-3.5 h-3.5 text-orange-600" /> MANUAL REVIEW
-                      </span>
-                    )}
-                    {lastMatch.status === 'spoof_rejected' && (
-                      <span className="px-2.5 py-0.5 rounded-md bg-rose-100 text-rose-900 text-[10px] font-extrabold flex items-center gap-1 border border-rose-300">
-                        <Lock className="w-3.5 h-3.5 text-rose-600" /> SPOOF SUSPECTED
-                      </span>
-                    )}
+            {/* Candidate Match Action Card Floating Overlay with Prominent "Mark Attendance" Option */}
+            {scannedCandidate && (
+              <div className="absolute bottom-4 left-4 right-4 p-5 rounded-3xl glass-panel bg-white/95 border-2 border-amber-400 shadow-2xl space-y-3 transition-all animate-in fade-in slide-in-from-bottom-3">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <img
+                      src={scannedCandidate.worker?.photo_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
+                      alt={scannedCandidate.worker?.name}
+                      className="w-14 h-14 rounded-2xl object-cover border-2 border-amber-500 shrink-0 shadow-md"
+                    />
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="font-extrabold text-slate-900 text-lg truncate">
+                          {scannedCandidate.worker?.name}
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 text-[10px] font-extrabold border border-amber-300">
+                          Matched (Dist: {scannedCandidate.distance.toFixed(3)})
+                        </span>
+                      </div>
+                      <div className="text-xs text-slate-600 font-mono mt-0.5 flex items-center gap-2">
+                        <span>Phone: {scannedCandidate.worker?.phone}</span>
+                        <span>•</span>
+                        <span className="font-bold text-slate-900">Wage: ₹{scannedCandidate.worker?.wage_rate_per_day || 350}/day</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-700 flex items-center gap-3 mt-1 font-mono">
-                    <span>Dist Score: {lastMatch.distance.toFixed(3)}</span>
-                    {lastMatch.reason && <span className="font-semibold text-amber-900">• {lastMatch.reason}</span>}
-                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setScannedCandidate(null)}
+                    className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+                    title="Dismiss"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Primary Option: MARK ATTENDANCE BUTTON */}
+                <div className="flex items-center gap-3 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => handleExecuteMarkAttendance()}
+                    disabled={submitting}
+                    className={`flex-1 py-3 px-5 rounded-2xl font-black text-sm transition-all flex items-center justify-center gap-2 shadow-xl ${
+                      scanMode === 'CHECK_IN'
+                        ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/30'
+                        : 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/30'
+                    }`}
+                  >
+                    {submitting ? (
+                      <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-5 h-5" />
+                        MARK ATTENDANCE ({scanMode === 'CHECK_IN' ? 'Check-In' : 'Check-Out'})
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setScannedCandidate(null)}
+                    className="px-4 py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold transition-all border border-slate-300"
+                  >
+                    Scan Next
+                  </button>
                 </div>
               </div>
             )}
@@ -509,6 +613,87 @@ export default function LiveAttendancePage() {
               })
             )}
           </div>
+        </div>
+      </div>
+
+      {/* Manual Worker Attendance Register & Option Panel */}
+      <div className="glass-panel p-6 rounded-3xl border border-slate-200 space-y-4 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <UserCheck className="w-5 h-5 text-amber-600" />
+              <h2 className="text-lg font-bold text-slate-900">Enrolled Worker Direct Attendance Register</h2>
+            </div>
+            <p className="text-xs text-slate-600 font-medium">Select any worker to directly trigger their Check-In or Check-Out attendance</p>
+          </div>
+
+          <div className="relative w-full sm:w-72">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              placeholder="Search worker by name or phone..."
+              value={manualSearch}
+              onChange={(e) => setManualSearch(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs font-medium"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredEnrolledWorkers.length === 0 ? (
+            <div className="col-span-full py-8 text-center text-slate-500 text-xs font-medium">
+              No workers match your search.
+            </div>
+          ) : (
+            filteredEnrolledWorkers.map((w) => {
+              const existingAtt = attendances.find((a) => a.worker_id === w.id)
+              const isCheckedIn = existingAtt && !existingAtt.out_time
+              const isCheckedOut = existingAtt && existingAtt.out_time
+
+              return (
+                <div key={w.id} className="p-4 rounded-2xl bg-white border border-slate-200 space-y-3 shadow-sm hover:border-amber-400/60 transition-all">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={w.photo_url || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150'}
+                      alt={w.name}
+                      className="w-12 h-12 rounded-xl object-cover border border-slate-200 shadow-sm"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-bold text-slate-900 truncate">{w.name}</div>
+                      <div className="text-xs text-slate-500 font-mono">{w.phone}</div>
+                      <div className="text-[11px] font-extrabold text-amber-700 mt-0.5">₹{w.wage_rate_per_day || 350}/day</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-slate-100 pt-2 text-[11px]">
+                    <span className="text-slate-500 font-medium">
+                      {isCheckedOut ? (
+                        <span className="text-amber-800 font-bold">Checked Out ({existingAtt.total_hours || 8} hrs)</span>
+                      ) : isCheckedIn ? (
+                        <span className="text-emerald-700 font-bold">Checked In</span>
+                      ) : (
+                        <span>Not Logged Today</span>
+                      )}
+                    </span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleExecuteMarkAttendance(null, w.id)}
+                      disabled={submitting}
+                      className={`px-3 py-1.5 rounded-xl font-extrabold text-xs transition-all flex items-center gap-1.5 shadow-sm ${
+                        scanMode === 'CHECK_IN'
+                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20'
+                          : 'bg-amber-600 hover:bg-amber-500 text-white shadow-amber-600/20'
+                      }`}
+                    >
+                      <Check className="w-3.5 h-3.5" />
+                      Mark Attendance
+                    </button>
+                  </div>
+                </div>
+              )
+            })
+          )}
         </div>
       </div>
     </div>
