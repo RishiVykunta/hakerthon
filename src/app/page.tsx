@@ -197,8 +197,8 @@ export default function LandingPage() {
           {/* Left Large Image Card */}
           <div className="relative w-full h-[400px] lg:h-auto rounded-3xl overflow-hidden shadow-xl group">
             <Image 
-              src="https://images.unsplash.com/photo-1595846174154-b514e8615b3c?auto=format&fit=crop&q=80"
-              alt="Rural agriculture"
+              src="https://res.cloudinary.com/rdk6gzoj/image/upload/v1786544427/Beneficiaries_at_home.jpg"
+              alt="Beneficiaries at home"
               fill
               className="object-cover transition-transform duration-700 group-hover:scale-105"
             />
