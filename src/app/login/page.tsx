@@ -125,7 +125,7 @@ function LoginForm() {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <div onKeyDown={(e) => e.key === 'Enter' && handleSubmit(e as any)} className="space-y-4">
           <div className="space-y-1.5">
             <label className="block text-xs font-bold text-slate-700">Registered Phone Number *</label>
             <div className="relative">
@@ -136,7 +136,7 @@ function LoginForm() {
                 type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                required
+                autoComplete="off"
                 placeholder="Enter 10-digit mobile number"
                 className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors font-mono shadow-sm"
               />
@@ -154,7 +154,7 @@ function LoginForm() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
+                  autoComplete="new-password"
                   placeholder="Enter supervisor password"
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors shadow-sm"
                 />
@@ -163,8 +163,9 @@ function LoginForm() {
           )}
 
           <button
-            type="submit"
-            disabled={loading}
+            type="button"
+            onClick={handleSubmit as any}
+            disabled={loading || !phone || (role === 'supervisor' && !password)}
             className="w-full py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 disabled:opacity-50 transition-all flex items-center justify-center gap-2 shadow-xl shadow-amber-500/20"
           >
             {loading ? (
@@ -176,7 +177,7 @@ function LoginForm() {
               </>
             )}
           </button>
-        </form>
+        </div>
 
         {/* Demo Credentials Box */}
         <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200 space-y-2">
