@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import {
   ShieldCheck,
-  CheckCircle,
   Clock,
   User,
+  ScanFace,
   Users,
   FileText,
-  BarChart2,
-  ScanFace
+  BarChart2
 } from 'lucide-react'
+import Image from 'next/image'
 
 export default function LandingPage() {
   const [user, setUser] = useState<{ name: string; role: 'supervisor' | 'worker' } | null>(null)
@@ -32,58 +32,53 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-[calc(100vh-64px)] bg-[#F8FAF9] relative overflow-hidden">
+    <div className="min-h-screen bg-[#F9FCFA] font-sans">
       
-      {/* Wave bottom decoration - typical for this type of modern landing page */}
-      <div className="absolute bottom-0 left-0 right-0 z-0 opacity-40 hidden lg:block pointer-events-none">
-        <svg viewBox="0 0 1440 320" className="w-full h-auto" preserveAspectRatio="none">
-          <path fill="#d1fae5" fillOpacity="1" d="M0,256L48,229.3C96,203,192,149,288,154.7C384,160,480,224,576,229.3C672,235,768,181,864,149.3C960,117,1056,107,1152,112C1248,117,1344,139,1392,149.3L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
-        </svg>
-      </div>
-
-      <div className="max-w-[1500px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] h-full">
-        {/* LEFT COLUMN - TEXT & FEATURES */}
-        <div className="flex flex-col justify-center p-6 sm:p-10 lg:pl-16 xl:pl-24 lg:pr-10 py-12 lg:py-20 relative z-10">
+      {/* HERO SECTION */}
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100vh-64px)]">
+        
+        {/* LEFT COLUMN - TEXT & BUTTONS */}
+        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-16 xl:pl-24 lg:pr-12 pt-10 pb-8 lg:py-20 text-center lg:text-left relative z-10 order-1">
           
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-50 border border-green-100 text-green-700 text-xs font-bold w-fit mb-6 sm:mb-8 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 text-[10px] sm:text-xs font-bold w-fit mx-auto lg:mx-0 mb-6 lg:mb-8 shadow-sm">
             <ShieldCheck className="w-4 h-4" />
-            <span>AI-POWERED DIGITAL WORKFORCE MANAGEMENT</span>
+            <span className="tracking-wide">AI-POWERED RURAL WORKFORCE MANAGEMENT</span>
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl lg:text-[64px] font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight">
-            AI-Powered Worksite<br className="hidden sm:block"/>
-            Attendance &<br className="hidden sm:block"/>
-            <span className="text-green-700">Wage Integrity</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-extrabold text-slate-900 leading-[1.15] mb-4 lg:mb-6 tracking-tight">
+            AI-Powered Worksite<br className="hidden lg:block"/>
+            Attendance &<br className="hidden lg:block"/>
+            <span className="text-green-700"> Wage Integrity</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-slate-600 text-base sm:text-lg max-w-xl mb-8 leading-relaxed font-medium">
-            Verify workers, reduce proxy attendance, and maintain accurate attendance and wage records with AI-powered face-recognition.
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed font-medium">
+            Verify workers, reduce proxy attendance, and maintain accurate attendance and wage records with AI-powered face recognition.
           </p>
 
           {/* Feature Pills */}
-          <div className="flex flex-wrap items-center gap-3 mb-10">
-            <span className="px-4 py-2.5 rounded-lg bg-white border border-slate-100 flex items-center gap-2 shadow-sm text-sm font-semibold text-slate-700">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start items-center gap-3 mb-10">
+            <span className="w-full sm:w-auto px-4 py-3 sm:py-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-center lg:justify-start gap-2 shadow-sm text-[13px] sm:text-sm font-semibold text-slate-700">
               <ScanFace className="w-4 h-4 text-green-600" /> AI Face Verification
             </span>
-            <span className="px-4 py-2.5 rounded-lg bg-white border border-slate-100 flex items-center gap-2 shadow-sm text-sm font-semibold text-slate-700">
-              <CheckCircle className="w-4 h-4 text-slate-500" /> Accurate Records
+            <span className="w-full sm:w-auto px-4 py-3 sm:py-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-center lg:justify-start gap-2 shadow-sm text-[13px] sm:text-sm font-semibold text-slate-700">
+              <ShieldCheck className="w-4 h-4 text-green-600" /> Liveness Detection
             </span>
-            <span className="px-4 py-2.5 rounded-lg bg-white border border-slate-100 flex items-center gap-2 shadow-sm text-sm font-semibold text-slate-700">
-              <Clock className="w-4 h-4 text-slate-500" /> Real-time Attendance
+            <span className="w-full sm:w-auto px-4 py-3 sm:py-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-center lg:justify-start gap-2 shadow-sm text-[13px] sm:text-sm font-semibold text-slate-700">
+              <Clock className="w-4 h-4 text-green-600" /> Real-Time Attendance
             </span>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-center gap-4 mb-16 lg:mb-20 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 w-full">
             {loading ? (
               <div className="text-sm text-slate-400 py-3 font-semibold">Loading portal...</div>
             ) : user ? (
               <Link
                 href={user.role === 'supervisor' ? '/supervisor/dashboard' : '/worker/dashboard'}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-[#0d8236] text-white hover:bg-green-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-700/20"
+                className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-[#0d8236] text-white hover:bg-green-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-700/20"
               >
                 <User className="w-5 h-5" />
                 Go to {user.role === 'supervisor' ? 'Supervisor Dashboard' : 'Worker Dashboard'}
@@ -92,14 +87,14 @@ export default function LandingPage() {
               <>
                 <Link
                   href="/login?role=supervisor"
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-[#0d8236] text-white hover:bg-green-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-700/20"
+                  className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-[#0d8236] text-white hover:bg-green-800 transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-700/20"
                 >
                   <User className="w-5 h-5" />
                   Supervisor Portal Login
                 </Link>
                 <Link
                   href="/login?role=worker"
-                  className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold bg-white text-slate-800 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 shadow-sm"
+                  className="w-full sm:w-auto px-8 py-3.5 sm:py-4 rounded-xl font-bold bg-white text-slate-800 border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-all flex items-center justify-center gap-2 shadow-sm"
                 >
                   <User className="w-5 h-5 text-slate-600" />
                   Worker Self-Service Login
@@ -107,68 +102,73 @@ export default function LandingPage() {
               </>
             )}
           </div>
-
-          {/* Bottom Features Container */}
-          <div className="bg-white/80 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-md border border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 relative z-20 xl:w-[120%]">
-            
-            {/* Feature 1 */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-green-700 mb-1">
-                <ScanFace className="w-7 h-7" />
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Face Recognition</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                AI-powered facial verification to ensure genuine attendance.
-              </p>
-            </div>
-
-            {/* Feature 2 */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-green-700 mb-1">
-                <Users className="w-7 h-7" />
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Prevent Proxy Attendance</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Eliminates buddy punching and proxy attendance.
-              </p>
-            </div>
-
-            {/* Feature 3 */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-green-700 mb-1">
-                <FileText className="w-7 h-7" />
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Accurate Wage Payouts</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Ensure fair wages with accurate attendance and work records.
-              </p>
-            </div>
-
-            {/* Feature 4 */}
-            <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center text-green-700 mb-1">
-                <BarChart2 className="w-7 h-7" />
-              </div>
-              <h3 className="font-bold text-slate-900 text-sm">Supervisor Dashboard</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Real-time insights and reports for better decision-making.
-              </p>
-            </div>
-
-          </div>
         </div>
 
-        {/* RIGHT COLUMN - IMAGE (visible on lg, stacked on mobile) */}
-        <div className="relative h-[400px] lg:h-auto w-full overflow-hidden lg:rounded-bl-[4rem] order-first lg:order-last z-10">
-          <div 
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat lg:bg-left"
-            style={{ backgroundImage: 'url(/hero-bg.png)' }}
-          >
-            {/* Gradient overlay for mobile readability if image is dark at top */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#F8FAF9]/80 lg:hidden"></div>
-          </div>
+        {/* RIGHT COLUMN - IMAGE */}
+        <div className="w-full h-[350px] sm:h-[450px] lg:h-auto relative overflow-hidden lg:rounded-bl-[4rem] order-2 z-0">
+          <Image 
+            src="/hero-image-generated.png" 
+            alt="Rural worksite supervisor using AI tablet for face verification"
+            fill
+            className="object-cover object-center lg:object-left"
+            priority
+          />
+          {/* Subtle gradient overlay for better blending on mobile and desktop */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#F9FCFA] to-transparent lg:bg-gradient-to-r lg:from-[#F9FCFA] lg:to-transparent lg:w-32"></div>
         </div>
       </div>
+
+      {/* FEATURE CARDS SECTION */}
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 pb-16 lg:pb-24 pt-12 lg:pt-0 lg:-mt-16 relative z-20">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/40 border border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+          
+          {/* Feature 1 */}
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+              <ScanFace className="w-6 h-6 stroke-[1.5]" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm sm:text-base">Face Recognition</h3>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+              AI-powered facial verification to ensure genuine attendance.
+            </p>
+          </div>
+
+          {/* Feature 2 */}
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+              <Users className="w-6 h-6 stroke-[1.5]" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm sm:text-base">Prevent Proxy Attendance</h3>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+              Eliminates buddy punching and proxy attendance.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+              <FileText className="w-6 h-6 stroke-[1.5]" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm sm:text-base">Accurate Wage Payouts</h3>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+              Ensure fair wages with accurate attendance and work records.
+            </p>
+          </div>
+
+          {/* Feature 4 */}
+          <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+              <BarChart2 className="w-6 h-6 stroke-[1.5]" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-sm sm:text-base">Supervisor Dashboard</h3>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium leading-relaxed">
+              Real-time insights and reports for better decision-making.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
     </div>
   )
 }
