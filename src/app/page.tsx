@@ -37,8 +37,8 @@ export default function LandingPage() {
       {/* HERO SECTION */}
       <section className="text-center space-y-5 max-w-4xl mx-auto pt-2">
         {/* Product Badge */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-xs font-extrabold shadow-2xs mx-auto">
-          <Landmark className="w-3.5 h-3.5 text-amber-600" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-green-50 border border-green-200 text-green-900 text-xs font-extrabold shadow-2xs mx-auto">
+          <Landmark className="w-3.5 h-3.5 text-green-600" />
           <span>AI-POWERED RURAL WORKFORCE MANAGEMENT</span>
         </div>
 
@@ -55,7 +55,7 @@ export default function LandingPage() {
         {/* Hero Feature Badges */}
         <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs font-semibold text-slate-700">
           <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 flex items-center gap-1.5 shadow-2xs">
-            <Cpu className="w-3.5 h-3.5 text-amber-600" /> AI Face Verification
+            <Cpu className="w-3.5 h-3.5 text-green-600" /> AI Face Verification
           </span>
           <span className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 flex items-center gap-1.5 shadow-2xs">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Liveness Detection
@@ -72,7 +72,7 @@ export default function LandingPage() {
           ) : user ? (
             <Link
               href={user.role === 'supervisor' ? '/supervisor/dashboard' : '/worker/dashboard'}
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold bg-green-500 text-slate-950 hover:bg-green-400 transition-all flex items-center justify-center gap-2 shadow-md shadow-green-500/20 hover:scale-[1.01]"
             >
               <ShieldCheck className="w-4 h-4 text-slate-950" />
               Go to {user.role === 'supervisor' ? 'Supervisor Dashboard' : 'Worker Dashboard'}
@@ -82,7 +82,7 @@ export default function LandingPage() {
             <>
               <Link
                 href="/login?role=supervisor"
-                className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all flex items-center justify-center gap-2 shadow-md shadow-amber-500/20 hover:scale-[1.01]"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-xl font-extrabold bg-green-500 text-slate-950 hover:bg-green-400 transition-all flex items-center justify-center gap-2 shadow-md shadow-green-500/20 hover:scale-[1.01]"
               >
                 <ShieldCheck className="w-4 h-4 text-slate-950" />
                 Supervisor Portal Login
@@ -114,10 +114,10 @@ export default function LandingPage() {
           {/* CARD 01 */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider bg-amber-100 px-2 py-0.5 rounded-md border border-amber-300">
+              <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-0.5 rounded-md border border-green-300">
                 CARD 01
               </span>
-              <UserCheck className="w-4 h-4 text-amber-600" />
+              <UserCheck className="w-4 h-4 text-green-600" />
             </div>
             <h3 className="font-extrabold text-slate-900 text-base">Worker Enrollment</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -128,10 +128,10 @@ export default function LandingPage() {
           {/* CARD 02 */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-orange-900 uppercase tracking-wider bg-orange-100 px-2 py-0.5 rounded-md border border-orange-300">
+              <span className="text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
                 CARD 02
               </span>
-              <Camera className="w-4 h-4 text-orange-600" />
+              <Camera className="w-4 h-4 text-emerald-600" />
             </div>
             <h3 className="font-extrabold text-slate-900 text-base">AI Attendance Kiosk</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -142,10 +142,10 @@ export default function LandingPage() {
           {/* CARD 03 */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-wider bg-amber-100 px-2 py-0.5 rounded-md border border-amber-300">
+              <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-0.5 rounded-md border border-green-300">
                 CARD 03
               </span>
-              <AlertCircle className="w-4 h-4 text-amber-600" />
+              <AlertCircle className="w-4 h-4 text-green-600" />
             </div>
             <h3 className="font-extrabold text-slate-900 text-base">Review & Verification</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
@@ -156,10 +156,10 @@ export default function LandingPage() {
           {/* CARD 04 */}
           <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-2xs space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-extrabold text-orange-900 uppercase tracking-wider bg-orange-100 px-2 py-0.5 rounded-md border border-orange-300">
+              <span className="text-[10px] font-extrabold text-emerald-900 uppercase tracking-wider bg-emerald-100 px-2 py-0.5 rounded-md border border-emerald-300">
                 CARD 04
               </span>
-              <FileSpreadsheet className="w-4 h-4 text-orange-600" />
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
             </div>
             <h3 className="font-extrabold text-slate-900 text-base">Wage Records & Export</h3>
             <p className="text-xs text-slate-600 leading-relaxed font-medium">
