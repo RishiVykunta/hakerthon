@@ -36,7 +36,7 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F9FCFA] font-sans">
+    <div className="min-h-screen bg-[#F9FCFA] font-sans w-[100vw] relative left-1/2 -translate-x-1/2 -mt-8">
       
       {/* HERO SECTION - Full Width */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100vh-64px)]">
