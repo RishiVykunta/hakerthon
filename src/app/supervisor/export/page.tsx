@@ -7,6 +7,7 @@ export default function ReportsPage() {
   const [activeTab, setActiveTab] = useState<'wage' | 'attendance' | 'summary'>('wage')
   const [sessions, setSessions] = useState<any[]>([])
   const [selectedSessionId, setSelectedSessionId] = useState<string>('')
+  const [selectedDate, setSelectedDate] = useState<string>('')
   const [attendanceRecords, setAttendanceRecords] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -18,6 +19,8 @@ export default function ReportsPage() {
         const sessList = data.sessions || []
         setSessions(sessList)
         if (sessList.length > 0) {
+          const firstDate = new Date(sessList[0].date || sessList[0].created_at).toISOString().split('T')[0]
+          setSelectedDate(firstDate)
           setSelectedSessionId(sessList[0].id)
           fetchSessionAttendance(sessList[0].id)
         }
@@ -43,10 +46,22 @@ export default function ReportsPage() {
     }
   }
 
-  const handleSessionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const id = e.target.value
-    setSelectedSessionId(id)
-    fetchSessionAttendance(id)
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const dateStr = e.target.value
+    setSelectedDate(dateStr)
+    
+    const matchingSession = sessions.find(s => {
+      const sDate = new Date(s.date || s.created_at).toISOString().split('T')[0]
+      return sDate === dateStr
+    })
+
+    if (matchingSession) {
+      setSelectedSessionId(matchingSession.id)
+      fetchSessionAttendance(matchingSession.id)
+    } else {
+      setSelectedSessionId('')
+      setAttendanceRecords([])
+    }
   }
 
   // Valid confirmed / approved attendance entries
@@ -168,18 +183,13 @@ export default function ReportsPage() {
       {/* Session Selector & Overview Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-2 shadow-2xs">
-          <label className="block text-xs font-bold text-slate-700">Select Site Session</label>
-          <select
-            value={selectedSessionId}
-            onChange={handleSessionChange}
-            className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-xs font-mono focus:outline-none focus:border-slate-500"
-          >
-            {sessions.map((s) => (
-              <option key={s.id} value={s.id}>
-                {new Date(s.date || s.created_at).toLocaleDateString()} • {s.id} ({s.status})
-              </option>
-            ))}
-          </select>
+          <label className="block text-xs font-bold text-slate-700">Select Date</label>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            className="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 text-sm font-mono focus:outline-none focus:border-slate-500 shadow-sm"
+          />
         </div>
 
         <div className="bg-white p-5 rounded-2xl border border-slate-200 space-y-1 shadow-2xs">
