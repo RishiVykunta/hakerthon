@@ -44,7 +44,7 @@ export default function LandingPage() {
         {/* DESKTOP FULL-BLEED BACKGROUND IMAGE & SHADE */}
         <div className="hidden lg:block absolute inset-0 z-0 overflow-hidden lg:rounded-bl-[4rem]">
           <Image 
-            src="/hero-image-generated.png" 
+            src="https://res.cloudinary.com/rdk6gzoj/image/upload/v1786544804/ChatGPT_Image_Aug_12_2026_07_55_26_PM.png" 
             alt="Rural worksite supervisor using AI tablet for face verification"
             fill
             className="object-cover object-right"
@@ -126,7 +126,7 @@ export default function LandingPage() {
           {/* Mobile Image */}
           <div className="lg:hidden absolute inset-0">
             <Image 
-              src="/hero-image-generated.png" 
+              src="https://res.cloudinary.com/rdk6gzoj/image/upload/v1786544804/ChatGPT_Image_Aug_12_2026_07_55_26_PM.png" 
               alt="Rural worksite supervisor using AI tablet for face verification"
               fill
               className="object-cover object-center"
