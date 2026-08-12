@@ -117,8 +117,8 @@ export default function LandingPage() {
             className="object-cover object-center lg:object-left"
             priority
           />
-          {/* Subtle gradient overlay for better blending on mobile and desktop */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#F9FCFA] to-transparent lg:bg-gradient-to-r lg:from-[#F9FCFA] lg:to-transparent lg:w-32"></div>
+          {/* Smooth gradient overlay for perfect blending with the text section on mobile (top-to-bottom) and desktop (left-to-right) */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F9FCFA] via-[#F9FCFA]/80 to-transparent h-[40%] lg:h-full lg:bg-gradient-to-r lg:from-[#F9FCFA] lg:via-[#F9FCFA]/80 lg:to-transparent lg:w-[50%]"></div>
         </div>
       </div>
 
