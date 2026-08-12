@@ -409,14 +409,14 @@ export default function LiveAttendancePage() {
           </button>
 
           {/* Prominent IN TIME / OUT TIME Mode Selector */}
-          <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-md">
+          <div className="flex items-center gap-2 bg-slate-100/80 p-1.5 rounded-2xl border border-slate-300 shadow-inner relative z-20">
             <button
               type="button"
               onClick={() => setScanMode('CHECK_IN')}
-              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all duration-300 flex items-center gap-2 cursor-pointer border ${
                 scanMode === 'CHECK_IN'
-                  ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/30'
-                  : 'text-slate-600 hover:bg-emerald-50 hover:text-emerald-700'
+                  ? 'bg-emerald-600 text-white border-emerald-500 shadow-lg shadow-emerald-600/30 scale-100'
+                  : 'bg-white text-slate-600 border-slate-200 shadow-sm hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 scale-[0.98]'
               }`}
             >
               <LogIn className="w-4 h-4" />
@@ -425,10 +425,10 @@ export default function LiveAttendancePage() {
             <button
               type="button"
               onClick={() => setScanMode('CHECK_OUT')}
-              className={`px-4 py-2 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 ${
+              className={`px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all duration-300 flex items-center gap-2 cursor-pointer border ${
                 scanMode === 'CHECK_OUT'
-                  ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                  : 'text-slate-600 hover:bg-amber-50 hover:text-amber-700'
+                  ? 'bg-amber-600 text-white border-amber-500 shadow-lg shadow-amber-600/30 scale-100'
+                  : 'bg-white text-slate-600 border-slate-200 shadow-sm hover:bg-amber-50 hover:text-amber-700 hover:border-amber-200 scale-[0.98]'
               }`}
             >
               <LogOut className="w-4 h-4" />
