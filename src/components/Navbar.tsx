@@ -137,13 +137,13 @@ export default function Navbar() {
             <div className="flex items-center gap-1.5 sm:gap-2">
               <Link
                 href="/login?role=supervisor"
-                className="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-2xs whitespace-nowrap"
+                className="px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-extrabold bg-amber-500 text-slate-950 hover:bg-amber-400 transition-all shadow-2xs whitespace-nowrap"
               >
                 Supervisor Login
               </Link>
               <Link
                 href="/login?role=worker"
-                className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[11px] sm:text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all whitespace-nowrap"
+                className="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-[10px] sm:text-xs font-bold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 transition-all whitespace-nowrap"
               >
                 Worker Login
               </Link>
