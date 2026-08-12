@@ -36,34 +36,34 @@ export default function LandingPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F9FCFA] font-sans w-[100vw] relative left-1/2 -translate-x-1/2 -mt-8 pt-8">
+    <div className="min-h-screen bg-[#F9FCFA] font-sans w-[100vw] relative left-1/2 -translate-x-1/2 -mt-8">
       
-      {/* HERO SECTION - Premium 2-Column Layout */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 flex flex-col lg:flex-row items-center lg:items-stretch lg:min-h-[calc(100vh-64px)] pt-12 lg:pt-20 pb-16 lg:pb-24 gap-12 lg:gap-8">
+      {/* HERO SECTION - Full Width */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100vh-64px)]">
         
         {/* LEFT COLUMN - TEXT & BUTTONS */}
-        <div className="w-full lg:w-[52%] flex flex-col justify-center text-center lg:text-left">
+        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-[10%] xl:pl-[15%] lg:pr-12 pt-10 pb-8 lg:py-20 text-center lg:text-left relative z-10 order-1">
           
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 text-[10px] sm:text-xs font-bold w-fit mx-auto lg:mx-0 mb-6 lg:mb-8 shadow-sm">
             <ShieldCheck className="w-4 h-4" />
-            <span className="tracking-wide uppercase">AI-Powered Rural Workforce Management</span>
+            <span className="tracking-wide">AI-POWERED RURAL WORKFORCE MANAGEMENT</span>
           </div>
 
           {/* Heading */}
-          <h1 className="text-4xl sm:text-5xl md:text-[52px] lg:text-[64px] font-extrabold text-slate-900 leading-[1.08] mb-6 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[56px] font-extrabold text-slate-900 leading-[1.15] mb-4 lg:mb-6 tracking-tight">
             AI-Powered Worksite<br className="hidden lg:block"/>
             Attendance &<br className="hidden lg:block"/>
             <span className="text-green-700"> Wage Integrity</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 mb-8 lg:mb-10 leading-relaxed font-medium">
+          <p className="text-slate-600 text-sm sm:text-base lg:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed font-medium">
             Verify workers, reduce proxy attendance, and maintain accurate attendance and wage records with AI-powered face recognition.
           </p>
 
           {/* Feature Pills */}
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start items-center gap-3 mb-10 lg:mb-12">
+          <div className="flex flex-col sm:flex-row flex-wrap justify-center lg:justify-start items-center gap-3 mb-10">
             <span className="w-full sm:w-auto px-4 py-3 sm:py-2.5 rounded-xl bg-white border border-slate-200 flex items-center justify-center lg:justify-start gap-2 shadow-sm text-[13px] sm:text-sm font-semibold text-slate-700">
               <ScanFace className="w-4 h-4 text-green-600" /> AI Face Verification
             </span>
@@ -108,29 +108,27 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN - PREMIUM IMAGE CONTAINER */}
-        <div className="w-full lg:w-[48%] flex items-center justify-center relative">
-          <div className="relative w-full aspect-[4/3] lg:aspect-[3/4] xl:aspect-[4/5] rounded-[28px] lg:rounded-[36px] overflow-hidden shadow-2xl shadow-slate-300/60 transform hover:-translate-y-1 transition-transform duration-500 bg-white p-2 border border-slate-100">
-            <div className="relative w-full h-full rounded-[24px] lg:rounded-[30px] overflow-hidden">
-              <Image 
-                src="/hero-image-premium.png" 
-                alt="Rural worksite supervisor using AI tablet for face verification"
-                fill
-                className="object-cover object-center"
-                priority
-              />
-            </div>
-          </div>
+        {/* RIGHT COLUMN - IMAGE */}
+        <div className="w-full h-[350px] sm:h-[450px] lg:h-auto relative overflow-hidden lg:rounded-bl-[4rem] order-2 z-0">
+          <Image 
+            src="/hero-image-generated.png" 
+            alt="Rural worksite supervisor using AI tablet for face verification"
+            fill
+            className="object-cover object-center lg:object-left"
+            priority
+          />
+          {/* Smooth semi-transparent shade overlay so the image is visible behind the text */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F9FCFA] via-[#F9FCFA]/80 to-transparent h-[40%] lg:h-full lg:bg-gradient-to-r lg:from-[#F9FCFA]/95 lg:via-[#F9FCFA]/75 lg:to-transparent lg:w-[80%]"></div>
         </div>
       </div>
 
       {/* FEATURE CARDS SECTION */}
-      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pb-16 lg:pb-24 pt-4 lg:pt-0 relative z-20">
-        <div className="bg-white/90 backdrop-blur-md rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/40 border border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 pb-16 lg:pb-24 pt-12 lg:pt-0 lg:-mt-16 relative z-20">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/40 border border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
           
           {/* Feature 1 */}
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
               <ScanFace className="w-6 h-6 stroke-[1.5]" />
             </div>
             <h3 className="font-bold text-slate-900 text-sm sm:text-base">Face Recognition</h3>
@@ -141,7 +139,7 @@ export default function LandingPage() {
 
           {/* Feature 2 */}
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
               <Users className="w-6 h-6 stroke-[1.5]" />
             </div>
             <h3 className="font-bold text-slate-900 text-sm sm:text-base">Prevent Proxy Attendance</h3>
@@ -152,7 +150,7 @@ export default function LandingPage() {
 
           {/* Feature 3 */}
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
               <FileText className="w-6 h-6 stroke-[1.5]" />
             </div>
             <h3 className="font-bold text-slate-900 text-sm sm:text-base">Accurate Wage Payouts</h3>
@@ -163,7 +161,7 @@ export default function LandingPage() {
 
           {/* Feature 4 */}
           <div className="flex flex-col items-center sm:items-start text-center sm:text-left space-y-3 group">
-            <div className="w-12 h-12 rounded-2xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
+            <div className="w-12 h-12 rounded-xl bg-green-50/80 flex items-center justify-center text-green-700 mb-2 border border-green-100/50 group-hover:scale-105 transition-transform duration-300">
               <BarChart2 className="w-6 h-6 stroke-[1.5]" />
             </div>
             <h3 className="font-bold text-slate-900 text-sm sm:text-base">Supervisor Dashboard</h3>
@@ -176,7 +174,7 @@ export default function LandingPage() {
       </div>
 
       {/* WORKFLOW SECTION: HOW GREENGRID WORKS */}
-      <section className="space-y-8 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 pb-20 pt-10 border-t border-slate-200/80 bg-[#F9FCFA]">
+      <section className="space-y-8 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 pb-20 pt-10 border-t border-slate-200/80 bg-white">
         <div className="text-center max-w-2xl mx-auto space-y-2">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             How GreenGrid Works
@@ -188,7 +186,7 @@ export default function LandingPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {/* CARD 01 */}
-          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
                 CARD 01
@@ -202,7 +200,7 @@ export default function LandingPage() {
           </div>
 
           {/* CARD 02 */}
-          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
                 CARD 02
@@ -216,7 +214,7 @@ export default function LandingPage() {
           </div>
 
           {/* CARD 03 */}
-          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
                 CARD 03
@@ -230,7 +228,7 @@ export default function LandingPage() {
           </div>
 
           {/* CARD 04 */}
-          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
                 CARD 04
