@@ -39,10 +39,23 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#F9FCFA] font-sans w-[100vw] relative left-1/2 -translate-x-1/2 -mt-8">
       
       {/* HERO SECTION - Full Width */}
-      <div className="w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100vh-64px)]">
+      <div className="w-full relative lg:min-h-[calc(100vh-64px)] flex flex-col lg:grid lg:grid-cols-[1.1fr_0.9fr]">
         
+        {/* DESKTOP FULL-BLEED BACKGROUND IMAGE & SHADE */}
+        <div className="hidden lg:block absolute inset-0 z-0 overflow-hidden lg:rounded-bl-[4rem]">
+          <Image 
+            src="/hero-image-generated.png" 
+            alt="Rural worksite supervisor using AI tablet for face verification"
+            fill
+            className="object-cover object-right"
+            priority
+          />
+          {/* Shade sits behind the text and fades smoothly toward the image, leaving the photograph 100% natural and undimmed */}
+          <div className="absolute inset-y-0 left-0 w-[65%] bg-gradient-to-r from-[#F9FCFA] via-[#F9FCFA]/90 to-transparent"></div>
+        </div>
+
         {/* LEFT COLUMN - TEXT & BUTTONS */}
-        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-[10%] xl:pl-[15%] lg:pr-12 pt-10 pb-8 lg:py-20 text-center lg:text-left relative z-10 order-1">
+        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-[10%] xl:pl-[15%] lg:pr-12 pt-10 pb-8 lg:py-20 text-center lg:text-left relative z-10 order-1 bg-[#F9FCFA] lg:bg-transparent">
           
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 text-[10px] sm:text-xs font-bold w-fit mx-auto lg:mx-0 mb-6 lg:mb-8 shadow-sm">
@@ -108,17 +121,20 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN - IMAGE */}
+        {/* RIGHT COLUMN - IMAGE (Mobile only, on desktop it's just an empty spacer for the grid) */}
         <div className="w-full h-[350px] sm:h-[450px] lg:h-auto relative overflow-hidden lg:rounded-bl-[4rem] order-2 z-0">
-          <Image 
-            src="/hero-image-generated.png" 
-            alt="Rural worksite supervisor using AI tablet for face verification"
-            fill
-            className="object-cover object-center lg:object-left"
-            priority
-          />
-          {/* Smooth semi-transparent shade overlay so the image is visible behind the text */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#F9FCFA] via-[#F9FCFA]/80 to-transparent h-[40%] lg:h-full lg:bg-gradient-to-r lg:from-[#F9FCFA]/95 lg:via-[#F9FCFA]/75 lg:to-transparent lg:w-[80%]"></div>
+          {/* Mobile Image */}
+          <div className="lg:hidden absolute inset-0">
+            <Image 
+              src="/hero-image-generated.png" 
+              alt="Rural worksite supervisor using AI tablet for face verification"
+              fill
+              className="object-cover object-center"
+              priority
+            />
+            {/* Smooth top-to-bottom blend for mobile */}
+            <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#F9FCFA] via-[#F9FCFA]/90 to-transparent"></div>
+          </div>
         </div>
       </div>
 
