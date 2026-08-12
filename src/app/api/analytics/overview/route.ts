@@ -33,41 +33,44 @@ export async function GET(req: Request) {
       })
 
       const totalWages = verifiedAttendances.reduce((acc, curr) => {
-        return acc + (curr.worker?.wage_rate_per_day || 350)
+        const hours = curr.total_hours || (curr.out_time ? 8.0 : 8.0)
+        const rate = curr.worker?.wage_rate_per_day || 350
+        return acc + Math.round((hours / 8.0) * rate)
       }, 0)
 
       const attendanceRate = totalWorkers > 0 ? Math.round((presentCount / totalWorkers) * 100) : 0
 
       return NextResponse.json({
-        totalWorkers: totalWorkers || 248,
-        presentToday: presentCount || 196,
-        attendanceRate: totalWorkers > 0 ? `${attendanceRate}%` : '79%',
-        estimatedWages: totalWages ? `₹${(totalWages / 1000).toFixed(0)}K` : '₹49K',
-        rawWages: totalWages || 49000,
+        totalWorkers,
+        presentToday: presentCount,
+        attendanceRate: `${attendanceRate}%`,
+        estimatedWages: `₹${totalWages.toLocaleString('en-IN')}`,
+        rawWages: totalWages,
       })
     } catch (dbErr) {
       // Fallback using mockStore
       const mockWorkers = mockStore.workers.filter((w) => w.site_id === site_id || !site_id)
-      const totalWorkers = mockWorkers.length || 248
+      const totalWorkers = mockWorkers.length
 
       const confirmedAtts = mockStore.attendances.filter(
         (a) => a.status === 'auto_confirmed' || a.status === 'manual_approved'
       )
-      const presentToday = confirmedAtts.length || 196
-      const rateNum = totalWorkers > 0 ? Math.min(Math.round((presentToday / totalWorkers) * 100), 100) : 79
+      const presentToday = confirmedAtts.length
+      const rateNum = totalWorkers > 0 ? Math.min(Math.round((presentToday / totalWorkers) * 100), 100) : 0
 
       let totalWages = 0
       confirmedAtts.forEach((att) => {
         const worker = mockWorkers.find((w) => w.id === att.worker_id)
-        totalWages += worker?.wage_rate_per_day || 350
+        const hours = att.total_hours || (att.out_time ? 8.0 : 8.0)
+        const rate = worker?.wage_rate_per_day || 350
+        totalWages += Math.round((hours / 8.0) * rate)
       })
-      if (totalWages === 0) totalWages = 49000
 
       return NextResponse.json({
         totalWorkers,
         presentToday,
         attendanceRate: `${rateNum}%`,
-        estimatedWages: `₹${(totalWages / 1000).toFixed(0)}K`,
+        estimatedWages: `₹${totalWages.toLocaleString('en-IN')}`,
         rawWages: totalWages,
         fallback: true,
       })
@@ -75,10 +78,10 @@ export async function GET(req: Request) {
   } catch (err) {
     return NextResponse.json(
       {
-        totalWorkers: 248,
-        presentToday: 196,
-        attendanceRate: '79%',
-        estimatedWages: '₹49K',
+        totalWorkers: 0,
+        presentToday: 0,
+        attendanceRate: '0%',
+        estimatedWages: '₹0',
         fallback: true,
       },
       { status: 200 }

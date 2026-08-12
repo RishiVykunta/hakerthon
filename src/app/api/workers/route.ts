@@ -162,6 +162,31 @@ export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
+    const deleteAll = searchParams.get('all') === 'true' || id === 'all'
+    const site_id = searchParams.get('site_id') || 'site_rampur_01'
+
+    if (deleteAll) {
+      try {
+        await prisma.attendance.deleteMany({
+          where: site_id ? { worker: { site_id } } : {},
+        })
+        await prisma.wageRecord.deleteMany({
+          where: site_id ? { worker: { site_id } } : {},
+        })
+        await prisma.worker.deleteMany({
+          where: site_id ? { site_id } : {},
+        })
+      } catch (dbErr) {
+        console.error('Database bulk delete error:', dbErr)
+      }
+
+      // Sync mockStore deletion
+      mockStore.workers = site_id ? mockStore.workers.filter((w) => w.site_id !== site_id) : []
+      mockStore.attendances = []
+      mockStore.wageRecords = []
+
+      return NextResponse.json({ success: true, message: 'All workers removed successfully' })
+    }
 
     if (!id) {
       return NextResponse.json({ error: 'Worker ID is required' }, { status: 400 })

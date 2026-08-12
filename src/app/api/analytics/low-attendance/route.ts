@@ -17,7 +17,11 @@ export async function GET(req: Request) {
         select: { id: true },
       })
 
-      const totalSessionsCount = Math.max(recentSessions.length, 1)
+      if (recentSessions.length === 0) {
+        return NextResponse.json({ flaggedWorkers: [], cutoffPercent, totalSessionsEvaluated: 0 })
+      }
+
+      const totalSessionsCount = recentSessions.length
       const sessionIds = recentSessions.map((s) => s.id)
 
       const workers = await prisma.worker.findMany({
@@ -31,6 +35,10 @@ export async function GET(req: Request) {
           },
         },
       })
+
+      if (workers.length === 0) {
+        return NextResponse.json({ flaggedWorkers: [], cutoffPercent, totalSessionsEvaluated: totalSessionsCount })
+      }
 
       const flaggedWorkers = workers
         .map((w) => {
@@ -52,7 +60,18 @@ export async function GET(req: Request) {
     } catch (dbErr) {
       // Dynamic computation based on actual store workers and attendances
       const mockWorkers = mockStore.workers.filter((w) => w.site_id === site_id || !site_id)
-      const totalSessionsCount = 10
+      const mockSessions = mockStore.sessions.filter((s) => s.site_id === site_id || !site_id).slice(0, 10)
+
+      if (mockWorkers.length === 0 || mockSessions.length === 0) {
+        return NextResponse.json({
+          flaggedWorkers: [],
+          cutoffPercent,
+          totalSessionsEvaluated: mockSessions.length,
+          fallback: true,
+        })
+      }
+
+      const totalSessionsCount = mockSessions.length
 
       const flaggedWorkers = mockWorkers
         .map((w) => {

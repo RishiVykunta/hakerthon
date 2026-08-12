@@ -190,8 +190,7 @@ function LoginForm() {
             </div>
           ) : (
             <div className="text-xs text-slate-700 space-y-1 font-mono">
-              <div>Ramesh Singh: <code className="text-amber-900 font-bold bg-amber-200/70 px-1 py-0.5 rounded">9876543211</code></div>
-              <div>Sunita Devi: <code className="text-amber-900 font-bold bg-amber-200/70 px-1 py-0.5 rounded">9876543212</code></div>
+              <div>Enter 10-digit mobile number of any enrolled site worker to view their worker dashboard</div>
             </div>
           )}
         </div>

@@ -6,10 +6,14 @@ import { getAuthUser } from '@/lib/auth'
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
   const authUser = await getAuthUser()
-  const worker_id = searchParams.get('worker_id') || authUser?.id || 'worker_01'
+  const worker_id = searchParams.get('worker_id') || authUser?.id
 
   try {
     try {
+      if (!worker_id) {
+        throw new Error('Worker ID not provided')
+      }
+
       const worker = await prisma.worker.findUnique({
         where: { id: worker_id },
         include: {
@@ -32,7 +36,12 @@ export async function GET(req: Request) {
         (a) => a.status === 'auto_confirmed' || a.status === 'manual_approved'
       ).length
 
-      const totalWagesEarned = totalDaysPresent * worker.wage_rate_per_day
+      const totalWagesEarned = worker.attendances
+        .filter((a) => a.status === 'auto_confirmed' || a.status === 'manual_approved')
+        .reduce((sum, att) => {
+          const hours = att.total_hours || (att.out_time ? 8.0 : 8.0)
+          return sum + Math.round((hours / 8.0) * worker.wage_rate_per_day)
+        }, 0)
 
       return NextResponse.json({
         worker: {
@@ -52,12 +61,32 @@ export async function GET(req: Request) {
         wageRecords: worker.wage_records,
       })
     } catch (dbErr) {
-      const mockWorker = mockStore.workers.find((w) => w.id === worker_id || w.phone === authUser?.phone) || mockStore.workers[0]
+      const mockWorker = mockStore.workers.find((w) => (worker_id && w.id === worker_id) || w.phone === authUser?.phone) || mockStore.workers[0]
+
+      if (!mockWorker) {
+        return NextResponse.json({
+          worker: null,
+          stats: {
+            totalDaysPresent: 0,
+            totalWagesEarned: 0,
+            pendingReviewCount: 0,
+          },
+          attendances: [],
+          wageRecords: [],
+          fallback: true,
+        })
+      }
+
       const site = mockStore.sites.find((s) => s.id === mockWorker.site_id)
       const workerAtts = mockStore.attendances.filter((a) => a.worker_id === mockWorker.id)
 
       const totalDaysPresent = workerAtts.filter((a) => a.status === 'auto_confirmed' || a.status === 'manual_approved').length
-      const totalWagesEarned = totalDaysPresent * mockWorker.wage_rate_per_day
+      const totalWagesEarned = workerAtts
+        .filter((a) => a.status === 'auto_confirmed' || a.status === 'manual_approved')
+        .reduce((sum, att) => {
+          const hours = att.total_hours || (att.out_time ? 8.0 : 8.0)
+          return sum + Math.round((hours / 8.0) * mockWorker.wage_rate_per_day)
+        }, 0)
 
       return NextResponse.json({
         worker: {
@@ -69,8 +98,8 @@ export async function GET(req: Request) {
           site_name: site?.name || 'GreenGrid MGNREGA Worksite #4',
         },
         stats: {
-          totalDaysPresent: totalDaysPresent || 12,
-          totalWagesEarned: totalWagesEarned || 4200,
+          totalDaysPresent,
+          totalWagesEarned,
           pendingReviewCount: workerAtts.filter((a) => a.status === 'manual_review').length,
         },
         attendances: workerAtts,

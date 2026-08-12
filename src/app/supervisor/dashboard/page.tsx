@@ -35,6 +35,8 @@ export default function SupervisorDashboard() {
   // Worker Removal & Edit States
   const [deletingWorkerId, setDeletingWorkerId] = useState<string | null>(null)
   const [workerToDelete, setWorkerToDelete] = useState<any | null>(null)
+  const [showDeleteAllModal, setShowDeleteAllModal] = useState(false)
+  const [deletingAll, setDeletingAll] = useState(false)
   const [workerSearch, setWorkerSearch] = useState('')
 
   // Worker Edit States
@@ -57,7 +59,8 @@ export default function SupervisorDashboard() {
       // 2. Fetch workers
       const workersRes = await fetch('/api/workers')
       const workersData = await workersRes.json()
-      setWorkers(workersData.workers || [])
+      const fetchedWorkers = workersData.workers || []
+      setWorkers(fetchedWorkers)
 
       // 3. Fetch current session attendance
       if (activeSess?.id) {
@@ -69,7 +72,9 @@ export default function SupervisorDashboard() {
       // 4. Fetch low attendance analytics
       const lowAttRes = await fetch('/api/analytics/low-attendance?cutoff=70')
       const lowAttData = await lowAttRes.json()
-      setLowAttendanceWorkers(lowAttData.flaggedWorkers || [])
+      const flagged = lowAttData.flaggedWorkers || []
+      const enrolledWorkerIds = new Set(fetchedWorkers.map((w: any) => w.id))
+      setLowAttendanceWorkers(flagged.filter((w: any) => enrolledWorkerIds.has(w.id)))
     } catch (err) {
       console.error('Error loading dashboard data:', err)
     } finally {
@@ -124,6 +129,26 @@ export default function SupervisorDashboard() {
       console.error('Error removing worker:', err)
     } finally {
       setDeletingWorkerId(null)
+    }
+  }
+
+  const handleDeleteAllWorkers = async () => {
+    setDeletingAll(true)
+    try {
+      const res = await fetch('/api/workers?all=true', { method: 'DELETE' })
+      const data = await res.json()
+      if (res.ok) {
+        setWorkers([])
+        setLowAttendanceWorkers([])
+        setAttendances([])
+        setShowDeleteAllModal(false)
+      } else {
+        alert(data.error || 'Failed to remove all workers')
+      }
+    } catch (err) {
+      console.error('Error removing all workers:', err)
+    } finally {
+      setDeletingAll(false)
     }
   }
 
@@ -348,6 +373,15 @@ export default function SupervisorDashboard() {
                 className="pl-8 pr-3 py-1.5 rounded-xl bg-white border border-slate-300 text-xs text-slate-900 focus:outline-none focus:border-amber-500 shadow-2xs w-48 sm:w-64"
               />
             </div>
+            {workers.length > 0 && (
+              <button
+                onClick={() => setShowDeleteAllModal(true)}
+                className="px-3.5 py-1.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 font-extrabold text-xs hover:bg-rose-100 transition-all flex items-center gap-1.5 shadow-2xs shrink-0"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                Remove All
+              </button>
+            )}
             <Link
               href="/supervisor/enroll"
               className="px-3.5 py-1.5 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-xs hover:bg-amber-400 transition-all flex items-center gap-1.5 shadow-2xs shrink-0"
@@ -563,6 +597,58 @@ export default function SupervisorDashboard() {
                   <>
                     <Trash2 className="w-4 h-4" />
                     Confirm Remove
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Modal for Removing ALL Workers */}
+      {showDeleteAllModal && (
+        <div className="fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="glass-panel p-6 rounded-3xl border border-slate-200 bg-white max-w-md w-full space-y-5 shadow-2xl animate-in fade-in zoom-in-95">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-rose-100 border border-rose-200 text-rose-600 flex items-center justify-center shrink-0">
+                <Trash2 className="w-6 h-6" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-slate-900">Remove All Enrolled Workers</h3>
+                <p className="text-xs text-slate-500">Bulk delete worker directory & face vectors</p>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-rose-50/80 border border-rose-200 text-xs text-rose-900 space-y-2">
+              <p className="font-semibold">
+                Are you sure you want to remove ALL <span className="font-extrabold text-slate-900 underline">{workers.length} worker(s)</span> from this worksite?
+              </p>
+              <p className="text-[11px] text-rose-700 leading-relaxed font-medium">
+                This will delete all enrolled worker face profiles, attendance history, and low attendance records for this site. This action cannot be undone.
+              </p>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteAllModal(false)}
+                disabled={deletingAll}
+                className="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 hover:text-slate-900 text-xs font-semibold"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleDeleteAllWorkers}
+                disabled={deletingAll}
+                className="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold transition-all flex items-center gap-2 shadow-lg shadow-rose-600/20"
+              >
+                {deletingAll ? (
+                  <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Trash2 className="w-4 h-4" />
+                    Confirm Remove All
                   </>
                 )}
               </button>
