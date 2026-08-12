@@ -9,7 +9,11 @@ import {
   ScanFace,
   Users,
   FileText,
-  BarChart2
+  BarChart2,
+  Camera,
+  UserCheck,
+  AlertCircle,
+  FileSpreadsheet
 } from 'lucide-react'
 import Image from 'next/image'
 
@@ -34,11 +38,11 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#F9FCFA] font-sans">
       
-      {/* HERO SECTION */}
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100vh-64px)]">
+      {/* HERO SECTION - Full Width */}
+      <div className="w-full grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] lg:min-h-[calc(100vh-64px)]">
         
         {/* LEFT COLUMN - TEXT & BUTTONS */}
-        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-16 xl:pl-24 lg:pr-12 pt-10 pb-8 lg:py-20 text-center lg:text-left relative z-10 order-1">
+        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-[10%] xl:pl-[15%] lg:pr-12 pt-10 pb-8 lg:py-20 text-center lg:text-left relative z-10 order-1">
           
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-700 text-[10px] sm:text-xs font-bold w-fit mx-auto lg:mx-0 mb-6 lg:mb-8 shadow-sm">
@@ -119,7 +123,7 @@ export default function LandingPage() {
       </div>
 
       {/* FEATURE CARDS SECTION */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 pb-16 lg:pb-24 pt-12 lg:pt-0 lg:-mt-16 relative z-20">
+      <div className="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 pb-16 lg:pb-24 pt-12 lg:pt-0 lg:-mt-16 relative z-20">
         <div className="bg-white/90 backdrop-blur-md rounded-2xl p-6 sm:p-8 lg:p-10 shadow-xl shadow-slate-200/40 border border-slate-100 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
           
           {/* Feature 1 */}
@@ -168,6 +172,76 @@ export default function LandingPage() {
 
         </div>
       </div>
+
+      {/* WORKFLOW SECTION: HOW GREENGRID WORKS */}
+      <section className="space-y-8 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-16 pb-20 pt-10 border-t border-slate-200/80 bg-white">
+        <div className="text-center max-w-2xl mx-auto space-y-2">
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            How GreenGrid Works
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-600 font-medium">
+            From worker enrollment to verified attendance and wage records.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* CARD 01 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
+                CARD 01
+              </span>
+              <UserCheck className="w-5 h-5 text-green-600" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-base">Worker Enrollment</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+              Register workers and securely enroll their face descriptor vectors on-site.
+            </p>
+          </div>
+
+          {/* CARD 02 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
+                CARD 02
+              </span>
+              <Camera className="w-5 h-5 text-green-600" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-base">AI Attendance Kiosk</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+              Verify workers in real time via live webcam face recognition scanner.
+            </p>
+          </div>
+
+          {/* CARD 03 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
+                CARD 03
+              </span>
+              <AlertCircle className="w-5 h-5 text-green-600" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-base">Review & Verification</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+              Send uncertain matches and low attendance flags to supervisor manual review.
+            </p>
+          </div>
+
+          {/* CARD 04 */}
+          <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm space-y-4 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-extrabold text-green-900 uppercase tracking-wider bg-green-100 px-2 py-1 rounded-md border border-green-200">
+                CARD 04
+              </span>
+              <FileSpreadsheet className="w-5 h-5 text-green-600" />
+            </div>
+            <h3 className="font-bold text-slate-900 text-base">Wage Records & Export</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+              Maintain attendance-based wage records and export official CSV reports.
+            </p>
+          </div>
+        </div>
+      </section>
 
     </div>
   )
