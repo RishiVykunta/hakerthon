@@ -55,7 +55,7 @@ export default function LandingPage() {
         </div>
 
         {/* LEFT COLUMN - TEXT & BUTTONS */}
-        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-[10%] xl:pl-[15%] lg:pr-12 pt-16 pb-12 lg:py-24 text-center lg:text-left relative z-10 order-1 bg-gradient-to-b from-[#F9FCFA] via-[#F9FCFA]/95 to-transparent lg:bg-transparent">
+        <div className="flex flex-col justify-center px-4 sm:px-6 lg:pl-[10%] xl:pl-[15%] lg:pr-12 pt-16 pb-12 lg:py-24 text-center lg:text-left relative z-10 order-1 bg-gradient-to-b from-[#F9FCFA] via-[#F9FCFA]/95 to-transparent lg:bg-none">
           
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200 text-green-800 text-xs font-bold w-fit mx-auto lg:mx-0 mb-6 lg:mb-8 shadow-sm">
