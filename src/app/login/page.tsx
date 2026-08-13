@@ -151,12 +151,12 @@ function LoginForm() {
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
-                  type="password"
+                  type="text"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="new-password"
+                  autoComplete="off"
                   placeholder="Enter supervisor password"
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors shadow-sm"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-slate-300 text-slate-900 text-sm focus:outline-none focus:border-amber-500 transition-colors shadow-sm password-mask"
                 />
               </div>
             </div>

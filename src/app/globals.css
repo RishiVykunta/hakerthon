@@ -117,3 +117,8 @@
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(249, 115, 22, 0.5);
 }
+
+/* Bypass browser password manager popup */
+.password-mask {
+  -webkit-text-security: disc;
+}
